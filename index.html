@@ -1430,7 +1430,7 @@
                     <button class="sub-tab" onclick="showSubTab('S_N솔루션')">S/N솔루션</button>
                     <button class="sub-tab" onclick="showSubTab('특허기술자문료')">특허기술자문료</button>
                     <button class="sub-tab" onclick="showSubTab('자재판매')">자재판매</button>
-                    <button class="download-btn" id="downloadBtn" onclick="downloadFile()">📥 다운로드</button>
+                    <button class="download-btn" id="downloadBtn" onclick="downloadFile()" style="display:none;">📥 다운로드</button>
                 </div>
                 
                 <div class="table-header">
@@ -1835,6 +1835,7 @@
             reader.onload = function(e) {
                 // 파일 데이터 저장 (다운로드용)
                 uploadedFileData = e.target.result;
+                document.getElementById('downloadBtn').style.display = 'inline-block';
                 
                 try {
                     // sheetStubs: true로 빈 셀도 읽기, cellFormula: false로 수식 대신 값 읽기
@@ -1905,6 +1906,7 @@
                 const dataToSave = {
                     allData: allData,
                     uploadedFileName: uploadedFileName,
+                    uploadedFileData: uploadedFileData,
                     updateDate: document.getElementById('updateDate').textContent,
                     savedAt: new Date().toISOString()
                 };
@@ -1912,6 +1914,19 @@
                 console.log('데이터가 localStorage에 저장되었습니다.');
             } catch (e) {
                 console.error('localStorage 저장 실패:', e);
+                // 용량 초과 시 파일 데이터 제외하고 저장 시도
+                try {
+                    const dataWithoutFile = {
+                        allData: allData,
+                        uploadedFileName: uploadedFileName,
+                        updateDate: document.getElementById('updateDate').textContent,
+                        savedAt: new Date().toISOString()
+                    };
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataWithoutFile));
+                    console.log('파일 데이터 제외하고 저장되었습니다.');
+                } catch (e2) {
+                    console.error('localStorage 저장 완전 실패:', e2);
+                }
             }
         }
         
@@ -1923,6 +1938,7 @@
                     const data = JSON.parse(saved);
                     allData = data.allData || {};
                     uploadedFileName = data.uploadedFileName || '';
+                    uploadedFileData = data.uploadedFileData || null;
                     
                     // UI 업데이트
                     if (data.updateDate) {
