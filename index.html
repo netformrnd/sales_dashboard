@@ -3507,16 +3507,74 @@
             if (e.key === 'Enter') applyFilter(); 
         });
         
-        // 페이지 로드 시 데이터 처리
-        // 1. localStorage에 더 최신 데이터가 있으면 사용
-        // 2. 없으면 내장 데이터 사용
-        if (!loadFromLocalStorage()) {
-            // localStorage에 데이터가 없으면 내장 데이터로 표시
-            if (Object.keys(allData).length > 0) {
+        // GitHub에서 엑셀 파일 자동 로드
+        async function loadExcelFromGitHub() {
+            try {
+                const response = await fetch('./매출현황.xlsx');
+                if (!response.ok) throw new Error('파일을 찾을 수 없습니다');
+                
+                const arrayBuffer = await response.arrayBuffer();
+                const data = new Uint8Array(arrayBuffer);
+                
+                // 다운로드용 데이터 저장
+                uploadedFileData = '';
+                for (let i = 0; i < data.length; i++) {
+                    uploadedFileData += String.fromCharCode(data[i]);
+                }
+                uploadedFileName = '매출현황.xlsx';
+                
+                // 현재 시간으로 업데이트 날짜 설정
+                const now = new Date();
+                const dateStr = now.getFullYear() + '-' + 
+                    String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                    String(now.getDate()).padStart(2, '0') + ' ' +
+                    String(now.getHours()).padStart(2, '0') + ':' +
+                    String(now.getMinutes()).padStart(2, '0');
+                document.getElementById('updateDate').textContent = dateStr;
+                document.getElementById('updateTimeHeader').textContent = dateStr + ' 업데이트';
+                
+                // 다운로드 버튼 표시
+                document.getElementById('downloadBtn').style.display = 'inline-block';
+                
+                // 엑셀 파싱
+                workbook = XLSX.read(data, { 
+                    type: 'array', 
+                    cellDates: false,
+                    cellFormula: false,
+                    cellNF: false,
+                    cellText: false,
+                    sheetStubs: true
+                });
+                
+                Object.keys(categoryConfig).forEach(name => {
+                    if (workbook.SheetNames.includes(name)) {
+                        const sheet = workbook.Sheets[name];
+                        allData[name] = XLSX.utils.sheet_to_json(sheet, { 
+                            defval: '', 
+                            raw: true,
+                            blankrows: false
+                        });
+                    }
+                });
+                
                 processWorkbook();
                 document.getElementById('dashboard').classList.remove('hidden');
+                console.log('GitHub에서 데이터를 불러왔습니다.');
+                
+            } catch (e) {
+                console.log('GitHub 파일 로드 실패, localStorage 확인:', e);
+                // GitHub 파일 없으면 localStorage에서 불러오기
+                if (!loadFromLocalStorage()) {
+                    if (Object.keys(allData).length > 0) {
+                        processWorkbook();
+                        document.getElementById('dashboard').classList.remove('hidden');
+                    }
+                }
             }
         }
+        
+        // 페이지 로드 시 실행
+        loadExcelFromGitHub();
     </script>
 </body>
 </html>
