@@ -930,57 +930,6 @@
             margin-top: 8px;
         }
         
-        /* 전년도 매출 */
-        .last-year-summary {
-            margin-top: 12px;
-        }
-        .ly-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            background: #f0f9ff;
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-        .ly-label {
-            font-size: 0.85rem;
-            color: #64748b;
-        }
-        .ly-value {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #0369a1;
-        }
-        .ly-months {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-        }
-        .ly-month-item {
-            padding: 8px;
-            background: #f8fafc;
-            border-radius: 6px;
-            text-align: center;
-        }
-        .ly-month-item.pending {
-            background: #fef3c7;
-            border: 1px dashed #f59e0b;
-        }
-        .ly-month-name {
-            font-size: 0.7rem;
-            color: #64748b;
-            margin-bottom: 2px;
-        }
-        .ly-month-value {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #1e293b;
-        }
-        .ly-month-item.pending .ly-month-value {
-            color: #b45309;
-        }
-        
         /* 카테고리별 매출 현황 테이블 (새 스타일) */
         .category-summary-section {
             background: white;
@@ -1395,7 +1344,20 @@
                 <div class="analysis-grid" style="margin-top: 20px;">
                     <!-- TOP 5 현장 -->
                     <div class="analysis-card">
-                        <div class="analysis-title">TOP 5 수익 현장</div>
+                        <div class="analysis-title" style="margin-bottom: 12px;">TOP 5 수익</div>
+                        
+                        <!-- 누적/당월 탭 -->
+                        <div style="display: flex; gap: 4px; margin-bottom: 10px;">
+                            <button onclick="setRankingPeriod('cumulative')" id="rankPeriodCumulative" class="rank-tab active" style="flex: 1; padding: 6px 10px; font-size: 0.75rem; border: 1px solid #e2e8f0; background: #3b82f6; color: white; border-radius: 6px; cursor: pointer;">누적</button>
+                            <button onclick="setRankingPeriod('monthly')" id="rankPeriodMonthly" class="rank-tab" style="flex: 1; padding: 6px 10px; font-size: 0.75rem; border: 1px solid #e2e8f0; background: white; color: #64748b; border-radius: 6px; cursor: pointer;">당월</button>
+                        </div>
+                        
+                        <!-- 업체/현장 탭 -->
+                        <div style="display: flex; gap: 4px; margin-bottom: 12px;">
+                            <button onclick="setRankingType('company')" id="rankTypeCompany" class="rank-tab active" style="flex: 1; padding: 5px 8px; font-size: 0.7rem; border: 1px solid #e2e8f0; background: #f1f5f9; color: #334155; border-radius: 4px; cursor: pointer;">업체별</button>
+                            <button onclick="setRankingType('site')" id="rankTypeSite" class="rank-tab" style="flex: 1; padding: 5px 8px; font-size: 0.7rem; border: 1px solid #e2e8f0; background: white; color: #94a3b8; border-radius: 4px; cursor: pointer;">현장별</button>
+                        </div>
+                        
                         <div class="ranking-list" id="top5Ranking">
                             <div class="ranking-row">
                                 <div class="ranking-num">1</div>
@@ -1425,9 +1387,9 @@
                         </div>
                     </div>
                     
-                    <!-- 전월 대비 + 전년 대비 -->
+                    <!-- 전월 대비 -->
                     <div class="analysis-card">
-                        <div class="analysis-title">전월 대비 (MoM)</div>
+                        <div class="analysis-title">전월 대비 (MoM) <span id="momPeriod" style="font-size: 0.7rem; color: #94a3b8; font-weight: 400;"></span></div>
                         <div class="mom-grid">
                             <div class="mom-item">
                                 <div class="mom-label">계약매출</div>
@@ -1439,60 +1401,6 @@
                                 <div class="mom-change new" id="momConfirmed">-</div>
                                 <div class="mom-detail" id="momConfirmedDetail">0 → 0</div>
                             </div>
-                        </div>
-                        
-                        <div class="analysis-title" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0;">전년 대비 (YoY)</div>
-                        <div class="mom-grid">
-                            <div class="mom-item">
-                                <div class="mom-label">동월 대비</div>
-                                <div class="mom-change" id="yoySameMonth">-</div>
-                                <div class="mom-detail" id="yoySameMonthDetail">전년 0 → 금년 0</div>
-                            </div>
-                            <div class="mom-item">
-                                <div class="mom-label">동기 누적</div>
-                                <div class="mom-change" id="yoyCumulative">-</div>
-                                <div class="mom-detail" id="yoyCumulativeDetail">1~2월 누적 비교</div>
-                            </div>
-                        </div>
-                        
-                        <!-- 전년도 매출 토글 -->
-                        <div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #e2e8f0;">
-                            <div onclick="toggleLastYearDetail()" style="cursor: pointer; display: flex; align-items: center; gap: 6px; color: #94a3b8; font-size: 0.75rem;">
-                                <span id="lyToggleIcon">▶</span> 전년도 매출현황 보기
-                            </div>
-                            <div id="lastYearDetail" style="display: none; margin-top: 10px; padding: 12px; background: #f8fafc; border-radius: 8px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <span style="font-size: 0.7rem; color: #64748b;">2025년 총매출: <strong id="lastYearTotal" style="color: #334155;">140.9억</strong></span>
-                                    <button onclick="openLastYearModal()" style="padding: 3px 8px; background: none; border: 1px solid #cbd5e1; color: #64748b; border-radius: 4px; cursor: pointer; font-size: 0.65rem;">12월 수정</button>
-                                </div>
-                                <div id="lastYearMonths" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; font-size: 0.65rem; color: #64748b;">
-                                    <!-- JavaScript로 채워짐 -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 전년도 매출 수정 모달 -->
-                <div id="lastYearModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-                    <div style="background: white; border-radius: 12px; padding: 25px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <h3 style="font-size: 1rem; font-weight: 600; color: #1e293b;">2025년 12월 매출 수정</h3>
-                            <button onclick="closeLastYearModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8;">&times;</button>
-                        </div>
-                        <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 15px;">12월 확정 매출을 입력하세요.</p>
-                        <div style="background: #fef3c7; padding: 12px; border-radius: 8px; border: 2px dashed #f59e0b;">
-                            <label style="font-size: 0.75rem; color: #92400e; display: block; margin-bottom: 6px;">12월 매출</label>
-                            <div style="display: flex; align-items: center; gap: 4px;">
-                                <input type="number" id="ly_11" value="" step="0.01" 
-                                    style="width: 100%; padding: 10px; border: 1px solid #f59e0b; border-radius: 4px; font-size: 1rem;"
-                                    placeholder="미확정">
-                                <span style="font-size: 0.9rem; color: #64748b;">억</span>
-                            </div>
-                        </div>
-                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
-                            <button onclick="closeLastYearModal()" style="padding: 8px 16px; border: 1px solid #e2e8f0; background: white; border-radius: 6px; cursor: pointer;">취소</button>
-                            <button onclick="saveLastYearEdit()" style="padding: 8px 16px; border: none; background: #3b82f6; color: white; border-radius: 6px; cursor: pointer;">저장</button>
                         </div>
                     </div>
                 </div>
@@ -1522,7 +1430,7 @@
                     <button class="sub-tab" onclick="showSubTab('S_N솔루션')">S/N솔루션</button>
                     <button class="sub-tab" onclick="showSubTab('특허기술자문료')">특허기술자문료</button>
                     <button class="sub-tab" onclick="showSubTab('자재판매')">자재판매</button>
-                    <button class="download-btn" id="downloadBtn" onclick="downloadFile()" style="display:none;">📥 다운로드</button>
+                    <button class="download-btn" id="downloadBtn" onclick="downloadFile()">📥 다운로드</button>
                 </div>
                 
                 <div class="table-header">
@@ -1611,216 +1519,77 @@
         // 월별 목표 금액 (수정 가능)
         let MONTHLY_TARGETS = MONTHLY_RATIOS.map(ratio => ratio ? Math.round(TARGET * ratio) : null);
         
-        /**
-         * ============================================
-         * 전년도(2025년) 월별 매출 데이터
-         * - 25년도매출.xlsx에서 추출한 실제 데이터
-         * - 12월은 미확정 (null)
-         * - localStorage에서 수정값 로드 가능
-         * ============================================
-         */
-        const DEFAULT_LAST_YEAR_SALES = [
-            347000000,   // 1월: 3.47억
-            297000000,   // 2월: 2.97억
-            841000000,   // 3월: 8.41억
-            1496000000,  // 4월: 14.96억
-            1898000000,  // 5월: 18.98억
-            1684000000,  // 6월: 16.84억
-            1457000000,  // 7월: 14.57억
-            1035000000,  // 8월: 10.35억
-            1465000000,  // 9월: 14.65억
-            1264000000,  // 10월: 12.64억
-            2304000000,  // 11월: 23.04억
-            null         // 12월: 미확정
-        ];
+        // TOP 5 랭킹 상태
+        let currentRankPeriod = 'cumulative';  // 'cumulative' | 'monthly'
+        let currentRankType = 'company';       // 'company' | 'site'
+        window.rankingData = { cumulative: { company: {}, site: {} }, monthly: { company: {}, site: {} } };
         
-        // localStorage에서 전년도 매출 로드 또는 기본값 사용
-        let LAST_YEAR_SALES = (() => {
-            try {
-                const saved = localStorage.getItem('lastYearSales');
-                if (saved) {
-                    return JSON.parse(saved);
-                }
-            } catch (e) {
-                console.log('localStorage 로드 실패');
-            }
-            return [...DEFAULT_LAST_YEAR_SALES];
-        })();
-        
-        // 전년도 매출현황 토글
-        function toggleLastYearDetail() {
-            const detail = document.getElementById('lastYearDetail');
-            const icon = document.getElementById('lyToggleIcon');
-            if (detail.style.display === 'none') {
-                detail.style.display = 'block';
-                icon.textContent = '▼';
+        // 랭킹 기간 탭 전환 (누적/당월)
+        function setRankingPeriod(period) {
+            currentRankPeriod = period;
+            
+            // 버튼 스타일 업데이트
+            const cumBtn = document.getElementById('rankPeriodCumulative');
+            const monBtn = document.getElementById('rankPeriodMonthly');
+            
+            if (period === 'cumulative') {
+                cumBtn.style.background = '#3b82f6';
+                cumBtn.style.color = 'white';
+                monBtn.style.background = 'white';
+                monBtn.style.color = '#64748b';
             } else {
-                detail.style.display = 'none';
-                icon.textContent = '▶';
+                monBtn.style.background = '#3b82f6';
+                monBtn.style.color = 'white';
+                cumBtn.style.background = 'white';
+                cumBtn.style.color = '#64748b';
             }
-        }
-        
-        // 전년도 매출 수정 모달 열기 (12월만)
-        function openLastYearModal() {
-            const dec = LAST_YEAR_SALES[11];
-            const valueInOk = dec ? (dec / 100000000).toFixed(2) : '';
-            document.getElementById('ly_11').value = valueInOk;
-            document.getElementById('lastYearModal').style.display = 'flex';
-        }
-        
-        // 전년도 매출 수정 모달 닫기
-        function closeLastYearModal() {
-            document.getElementById('lastYearModal').style.display = 'none';
-        }
-        
-        // 전년도 매출 저장 (12월만)
-        function saveLastYearEdit() {
-            const input = document.getElementById('ly_11');
-            const value = parseFloat(input.value);
             
-            if (!isNaN(value) && value > 0) {
-                LAST_YEAR_SALES[11] = Math.round(value * 100000000);  // 억 → 원
+            updateRankingDisplay();
+        }
+        
+        // 랭킹 타입 탭 전환 (업체/현장)
+        function setRankingType(type) {
+            currentRankType = type;
+            
+            // 버튼 스타일 업데이트
+            const compBtn = document.getElementById('rankTypeCompany');
+            const siteBtn = document.getElementById('rankTypeSite');
+            
+            if (type === 'company') {
+                compBtn.style.background = '#f1f5f9';
+                compBtn.style.color = '#334155';
+                siteBtn.style.background = 'white';
+                siteBtn.style.color = '#94a3b8';
             } else {
-                LAST_YEAR_SALES[11] = null;
+                siteBtn.style.background = '#f1f5f9';
+                siteBtn.style.color = '#334155';
+                compBtn.style.background = 'white';
+                compBtn.style.color = '#94a3b8';
             }
             
-            // localStorage에 저장
-            try {
-                localStorage.setItem('lastYearSales', JSON.stringify(LAST_YEAR_SALES));
-            } catch (e) {
-                console.log('localStorage 저장 실패');
-            }
-            
-            closeLastYearModal();
-            
-            // 화면 업데이트
-            updateLastYearDisplay();
-            updateYoYSection();
+            updateRankingDisplay();
         }
         
-        // 전년도 매출 월별 표시 업데이트 (작은 형태)
-        function updateLastYearDisplay() {
-            const months = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+        // TOP 5 랭킹 표시 업데이트
+        function updateRankingDisplay() {
+            const data = window.rankingData[currentRankPeriod][currentRankType];
             
-            // 연간 총매출 계산
-            const total = LAST_YEAR_SALES.filter(v => v !== null).reduce((sum, v) => sum + v, 0);
-            const totalEl = document.getElementById('lastYearTotal');
-            if (totalEl) {
-                totalEl.textContent = (total / 100000000).toFixed(1) + '억';
+            const sortedData = Object.entries(data)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            const rankingHtml = sortedData.map((item, idx) => `
+                <div class="ranking-row">
+                    <div class="ranking-num">${idx + 1}</div>
+                    <div class="ranking-name">${item[0]}</div>
+                    <div class="ranking-amount">${formatBillions(item[1])}</div>
+                </div>
+            `).join('') || '<div style="color:#888;text-align:center;padding:20px;">데이터 없음</div>';
+            
+            const top5RankingEl = document.getElementById('top5Ranking');
+            if (top5RankingEl) {
+                top5RankingEl.innerHTML = rankingHtml;
             }
-            
-            // 월별 매출 표시 ("1월 3.5억" 형식)
-            const monthsContainer = document.getElementById('lastYearMonths');
-            if (monthsContainer) {
-                let html = '';
-                months.forEach((month, idx) => {
-                    const sales = LAST_YEAR_SALES[idx];
-                    const isPending = idx === 11 && sales === null;
-                    const valueText = sales !== null ? (sales / 100000000).toFixed(1) + '억' : '미확정';
-                    const style = isPending ? 'color: #f59e0b; font-weight: 500;' : '';
-                    
-                    html += `<div style="${style}">${month} ${valueText}</div>`;
-                });
-                monthsContainer.innerHTML = html;
-            }
-        }
-        
-        // 전년 대비(YoY) 섹션 업데이트
-        function updateYoYSection() {
-            // 금년도 확정매출 계산
-            const currentYearMonthly = calculateCurrentYearMonthly();
-            
-            // 현재 데이터가 있는 월
-            const currentMonth = getCurrentDataMonth();
-            
-            // 동월 대비
-            const yoySameMonthEl = document.getElementById('yoySameMonth');
-            const yoySameMonthDetailEl = document.getElementById('yoySameMonthDetail');
-            
-            if (yoySameMonthEl && yoySameMonthDetailEl) {
-                const lastYearSameMonth = LAST_YEAR_SALES[currentMonth] || 0;
-                const currentYearSameMonth = currentYearMonthly[currentMonth] || 0;
-                
-                if (lastYearSameMonth > 0) {
-                    const rate = ((currentYearSameMonth - lastYearSameMonth) / lastYearSameMonth * 100);
-                    const isUp = rate >= 0;
-                    yoySameMonthEl.textContent = (isUp ? '▲ ' : '▼ ') + Math.abs(rate).toFixed(1) + '%';
-                    yoySameMonthEl.className = 'mom-change' + (isUp ? '' : ' down');
-                } else if (currentYearSameMonth > 0) {
-                    yoySameMonthEl.textContent = 'NEW';
-                    yoySameMonthEl.className = 'mom-change';
-                } else {
-                    yoySameMonthEl.textContent = '-';
-                    yoySameMonthEl.className = 'mom-change';
-                }
-                yoySameMonthDetailEl.textContent = `${currentMonth + 1}월: 전년 ${(lastYearSameMonth / 100000000).toFixed(2)}억 → 금년 ${(currentYearSameMonth / 100000000).toFixed(2)}억`;
-            }
-            
-            // 동기 누적 대비 (1월~현재월까지만 비교)
-            const yoyCumulativeEl = document.getElementById('yoyCumulative');
-            const yoyCumulativeDetailEl = document.getElementById('yoyCumulativeDetail');
-            
-            if (yoyCumulativeEl && yoyCumulativeDetailEl) {
-                // 전년도 1~현재월 누적
-                let lastYearCumulative = 0;
-                for (let i = 0; i <= currentMonth; i++) {
-                    lastYearCumulative += LAST_YEAR_SALES[i] || 0;
-                }
-                
-                // 금년도 1~현재월 누적
-                let currentYearCumulative = 0;
-                for (let i = 0; i <= currentMonth; i++) {
-                    currentYearCumulative += currentYearMonthly[i] || 0;
-                }
-                
-                if (lastYearCumulative > 0) {
-                    const rate = ((currentYearCumulative - lastYearCumulative) / lastYearCumulative * 100);
-                    const isUp = rate >= 0;
-                    yoyCumulativeEl.textContent = (isUp ? '▲ ' : '▼ ') + Math.abs(rate).toFixed(1) + '%';
-                    yoyCumulativeEl.className = 'mom-change' + (isUp ? '' : ' down');
-                } else if (currentYearCumulative > 0) {
-                    yoyCumulativeEl.textContent = 'NEW';
-                    yoyCumulativeEl.className = 'mom-change';
-                } else {
-                    yoyCumulativeEl.textContent = '-';
-                    yoyCumulativeEl.className = 'mom-change';
-                }
-                yoyCumulativeDetailEl.textContent = `1~${currentMonth + 1}월: 전년 ${(lastYearCumulative / 100000000).toFixed(1)}억 → 금년 ${(currentYearCumulative / 100000000).toFixed(1)}억`;
-            }
-        }
-        
-        // 금년도 월별 확정매출 계산
-        function calculateCurrentYearMonthly() {
-            const monthlyConfirmed = Array(12).fill(0);
-            
-            Object.keys(categoryConfig).forEach(sheetName => {
-                const data = allData[sheetName] || [];
-                const config = categoryConfig[sheetName];
-                
-                data.forEach(row => {
-                    const salesAmt = parseNumber(findColumn(row, config.salesAmountCol));
-                    const salesDateVal = findColumn(row, config.salesDateCol);
-                    const salesDate = excelDateToJSDate(salesDateVal);
-                    
-                    if (salesDate && salesDate.getFullYear() === 2026 && salesAmt > 0) {
-                        const month = salesDate.getMonth();
-                        monthlyConfirmed[month] += salesAmt;
-                    }
-                });
-            });
-            
-            return monthlyConfirmed;
-        }
-        
-        // 현재 데이터가 있는 마지막 월 찾기
-        function getCurrentDataMonth() {
-            const currentYearMonthly = calculateCurrentYearMonthly();
-            for (let i = 11; i >= 0; i--) {
-                if (currentYearMonthly[i] > 0) {
-                    return i;
-                }
-            }
-            return 0; // 기본값: 1월
         }
         
         // 목표 수정 모달 열기
@@ -2066,7 +1835,6 @@
             reader.onload = function(e) {
                 // 파일 데이터 저장 (다운로드용)
                 uploadedFileData = e.target.result;
-                document.getElementById('downloadBtn').style.display = 'inline-block';
                 
                 try {
                     // sheetStubs: true로 빈 셀도 읽기, cellFormula: false로 수식 대신 값 읽기
@@ -2431,7 +2199,22 @@
             let totalExpected = 0;
             const monthlySales = Array(12).fill(0);
             const monthlyExpected = Array(12).fill(0);
-            const siteSales = {};
+            
+            // TOP 5 데이터 (누적/당월 × 업체/현장)
+            const rankingData = {
+                cumulative: { company: {}, site: {} },
+                monthly: { company: {}, site: {} }
+            };
+            
+            // 동일 기간 비교를 위한 날짜별 데이터
+            const today = new Date();
+            const todayDay = today.getDate();  // 오늘 일자 (1~31)
+            const thisMonth = today.getMonth(); // 이번달 (0~11)
+            const prevMonthIdx = thisMonth > 0 ? thisMonth - 1 : 11; // 전월 인덱스
+            
+            // 동일 기간(1~오늘일) 매출
+            let thisMonthSamePeriod = { confirmed: 0, expected: 0 };
+            let prevMonthSamePeriod = { confirmed: 0, expected: 0 };
             
             Object.keys(categoryConfig).forEach(sheetName => {
                 const data = allData[sheetName] || [];
@@ -2448,10 +2231,35 @@
                             totalConfirmed += salesAmount;
                             monthlySales[date.getMonth()] += salesAmount;
                             
-                            // 현장별 매출 집계
+                            // 업체명, 현장명 추출
+                            const companyName = row['업체명'] || row['업체'] || '기타';
                             const siteName = row['현장명'] || row['현장'] || '기타';
-                            if (!siteSales[siteName]) siteSales[siteName] = 0;
-                            siteSales[siteName] += salesAmount;
+                            
+                            // 누적 데이터 집계
+                            if (!rankingData.cumulative.company[companyName]) rankingData.cumulative.company[companyName] = 0;
+                            rankingData.cumulative.company[companyName] += salesAmount;
+                            
+                            if (!rankingData.cumulative.site[siteName]) rankingData.cumulative.site[siteName] = 0;
+                            rankingData.cumulative.site[siteName] += salesAmount;
+                            
+                            // 당월 데이터 집계
+                            if (date.getMonth() === thisMonth) {
+                                if (!rankingData.monthly.company[companyName]) rankingData.monthly.company[companyName] = 0;
+                                rankingData.monthly.company[companyName] += salesAmount;
+                                
+                                if (!rankingData.monthly.site[siteName]) rankingData.monthly.site[siteName] = 0;
+                                rankingData.monthly.site[siteName] += salesAmount;
+                            }
+                            
+                            // 동일 기간 비교용 (1~오늘일)
+                            const dayOfMonth = date.getDate();
+                            if (dayOfMonth <= todayDay) {
+                                if (date.getMonth() === thisMonth) {
+                                    thisMonthSamePeriod.confirmed += salesAmount;
+                                } else if (date.getMonth() === prevMonthIdx) {
+                                    prevMonthSamePeriod.confirmed += salesAmount;
+                                }
+                            }
                         }
                     }
                     
@@ -2464,6 +2272,16 @@
                         if (date && date.getFullYear() === 2026) {
                             totalExpected += contractAmount;
                             monthlyExpected[date.getMonth()] += contractAmount;
+                            
+                            // 동일 기간 비교용 (1~오늘일)
+                            const dayOfMonth = date.getDate();
+                            if (dayOfMonth <= todayDay) {
+                                if (date.getMonth() === thisMonth) {
+                                    thisMonthSamePeriod.expected += contractAmount;
+                                } else if (date.getMonth() === prevMonthIdx) {
+                                    prevMonthSamePeriod.expected += contractAmount;
+                                }
+                            }
                         }
                     }
                 });
@@ -2481,7 +2299,6 @@
             const remainingMonths = 12 - currentMonth;
             
             // 연말 예상 매출 (일 단위 계산)
-            const today = new Date();
             const startOfYear = new Date(2026, 0, 1);
             const elapsedDays = Math.max(1, Math.floor((today - startOfYear) / (1000 * 60 * 60 * 24)) + 1);
             const dailyAvg = totalConfirmed / elapsedDays;
@@ -2532,32 +2349,21 @@
                 progressEl.style.background = '#22c55e';
             }
             
-            // TOP 5 현장
-            const sortedSites = Object.entries(siteSales)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 5);
+            // TOP 5 데이터 전역 저장 및 렌더링
+            window.rankingData = rankingData;
+            updateRankingDisplay();
             
-            const rankingHtml = sortedSites.map((site, idx) => `
-                <div class="ranking-row">
-                    <div class="ranking-num">${idx + 1}</div>
-                    <div class="ranking-name">${site[0]}</div>
-                    <div class="ranking-amount">${formatBillions(site[1])}</div>
-                </div>
-            `).join('') || '<div style="color:#888;text-align:center;padding:20px;">데이터 없음</div>';
-            
-            const top5RankingEl = document.getElementById('top5Ranking');
-            if (top5RankingEl) {
-                top5RankingEl.innerHTML = rankingHtml;
+            // 전월 대비 - 동일 기간 비교 (1~오늘일 기준)
+            const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+            const periodLabel = document.getElementById('momPeriod');
+            if (periodLabel) {
+                periodLabel.textContent = `(1~${todayDay}일 기준)`;
             }
             
-            // 전월 대비 (MoM)
-            const prevMonth = currentMonth > 1 ? currentMonth - 2 : 0;
-            const currMonth = currentMonth > 0 ? currentMonth - 1 : 0;
-            
-            const prevConfirmed = monthlySales[prevMonth] || 0;
-            const currConfirmed = monthlySales[currMonth] || 0;
-            const prevExpected = monthlyExpected[prevMonth] || 0;
-            const currExpected = monthlyExpected[currMonth] || 0;
+            const prevConfirmed = prevMonthSamePeriod.confirmed;
+            const currConfirmed = thisMonthSamePeriod.confirmed;
+            const prevExpected = prevMonthSamePeriod.expected;
+            const currExpected = thisMonthSamePeriod.expected;
             
             // 확정매출 증감률
             if (prevConfirmed > 0 && currConfirmed > 0) {
@@ -2573,7 +2379,7 @@
                 document.getElementById('momConfirmed').className = 'mom-change';
             }
             document.getElementById('momConfirmedDetail').textContent = 
-                `${formatSimple(prevConfirmed)} → ${formatSimple(currConfirmed)}`;
+                `${monthNames[prevMonthIdx]} ${formatSimple(prevConfirmed)} → ${monthNames[thisMonth]} ${formatSimple(currConfirmed)}`;
             
             // 계약매출 증감률
             if (prevExpected > 0 && currExpected > 0) {
@@ -2589,14 +2395,10 @@
                 document.getElementById('momExpected').className = 'mom-change';
             }
             document.getElementById('momExpectedDetail').textContent = 
-                `${formatSimple(prevExpected)} → ${formatSimple(currExpected)}`;
+                `${monthNames[prevMonthIdx]} ${formatSimple(prevExpected)} → ${monthNames[thisMonth]} ${formatSimple(currExpected)}`;
             
             // 월별 목표 테이블 렌더링
             updateMonthlyTargetTable(monthlySales);
-            
-            // 전년도 매출 표시 및 YoY 업데이트
-            updateLastYearDisplay();
-            updateYoYSection();
         }
         
         // 월별 목표 테이블 업데이트
