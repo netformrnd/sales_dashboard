@@ -1119,7 +1119,7 @@
         <h1>📊 (주) 넷폼알앤디 2026년 매출현황</h1>
         <div class="header-right">
             <span class="badge">LIVE</span>
-            <div class="date" id="updateTimeHeader">2025-12-29 15:00 업데이트</div>
+            <div class="date" id="updateTimeHeader">-</div>
         </div>
     </div>
     
@@ -1944,6 +1944,11 @@
                     if (data.updateDate) {
                         document.getElementById('updateDate').textContent = data.updateDate;
                         document.getElementById('updateTimeHeader').textContent = data.updateDate + ' 업데이트';
+                    }
+                    
+                    // 파일 데이터가 있으면 다운로드 버튼 표시
+                    if (uploadedFileData) {
+                        document.getElementById('downloadBtn').style.display = 'inline-block';
                     }
                     
                     // 데이터가 있으면 대시보드 표시
