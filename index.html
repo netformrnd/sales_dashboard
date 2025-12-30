@@ -1822,12 +1822,13 @@
             // 업로드된 파일 정보 저장
             uploadedFileName = file.name;
             
-            const now = new Date();
-            const dateStr = now.getFullYear() + '-' + 
-                String(now.getMonth() + 1).padStart(2, '0') + '-' + 
-                String(now.getDate()).padStart(2, '0') + ' ' +
-                String(now.getHours()).padStart(2, '0') + ':' +
-                String(now.getMinutes()).padStart(2, '0');
+            // 파일의 실제 수정 시간 사용 (업로드 시간이 아닌 파일 최종 수정 시간)
+            const fileModifiedDate = new Date(file.lastModified);
+            const dateStr = fileModifiedDate.getFullYear() + '-' + 
+                String(fileModifiedDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(fileModifiedDate.getDate()).padStart(2, '0') + ' ' +
+                String(fileModifiedDate.getHours()).padStart(2, '0') + ':' +
+                String(fileModifiedDate.getMinutes()).padStart(2, '0');
             document.getElementById('updateDate').textContent = dateStr;
             document.getElementById('updateTimeHeader').textContent = dateStr + ' 업데이트';
             
@@ -3513,6 +3514,25 @@
                 const response = await fetch('./매출현황.xlsx');
                 if (!response.ok) throw new Error('파일을 찾을 수 없습니다');
                 
+                // 파일의 Last-Modified 헤더에서 수정 시간 가져오기
+                const lastModified = response.headers.get('Last-Modified');
+                let fileDate;
+                
+                if (lastModified) {
+                    fileDate = new Date(lastModified);
+                } else {
+                    // Last-Modified 헤더가 없으면 현재 시간 사용 (fallback)
+                    fileDate = new Date();
+                }
+                
+                const dateStr = fileDate.getFullYear() + '-' + 
+                    String(fileDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                    String(fileDate.getDate()).padStart(2, '0') + ' ' +
+                    String(fileDate.getHours()).padStart(2, '0') + ':' +
+                    String(fileDate.getMinutes()).padStart(2, '0');
+                document.getElementById('updateDate').textContent = dateStr;
+                document.getElementById('updateTimeHeader').textContent = dateStr + ' 업데이트';
+                
                 const arrayBuffer = await response.arrayBuffer();
                 const data = new Uint8Array(arrayBuffer);
                 
@@ -3522,16 +3542,6 @@
                     uploadedFileData += String.fromCharCode(data[i]);
                 }
                 uploadedFileName = '매출현황.xlsx';
-                
-                // 현재 시간으로 업데이트 날짜 설정
-                const now = new Date();
-                const dateStr = now.getFullYear() + '-' + 
-                    String(now.getMonth() + 1).padStart(2, '0') + '-' + 
-                    String(now.getDate()).padStart(2, '0') + ' ' +
-                    String(now.getHours()).padStart(2, '0') + ':' +
-                    String(now.getMinutes()).padStart(2, '0');
-                document.getElementById('updateDate').textContent = dateStr;
-                document.getElementById('updateTimeHeader').textContent = dateStr + ' 업데이트';
                 
                 // 다운로드 버튼 표시
                 document.getElementById('downloadBtn').style.display = 'inline-block';
