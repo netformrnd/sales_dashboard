@@ -1111,6 +1111,259 @@
                 transform: translateY(0);
             }
         }
+        
+        /* YOY 섹션 스타일 */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .yoy-card {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+        }
+        .yoy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .yoy-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .yoy-edit-btn {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 3px 8px;
+            font-size: 10px;
+            color: #64748b;
+            cursor: pointer;
+        }
+        .yoy-edit-btn:hover {
+            background: #e2e8f0;
+        }
+        .yoy-toggle-btn {
+            background: none;
+            border: none;
+            font-size: 11px;
+            color: #64748b;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .yoy-toggle-btn:hover {
+            background: #f1f5f9;
+        }
+        .yoy-toggle-btn .arrow {
+            transition: transform 0.2s;
+        }
+        .yoy-toggle-btn.open .arrow {
+            transform: rotate(180deg);
+        }
+        .yoy-detail-table {
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .yoy-detail-table.show {
+            display: block;
+        }
+        .yoy-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            font-size: 11px;
+        }
+        .yoy-detail-item {
+            text-align: center;
+            padding: 6px 4px;
+            background: #f8fafc;
+            border-radius: 4px;
+        }
+        .yoy-detail-item .month {
+            color: #64748b;
+            font-size: 10px;
+        }
+        .yoy-detail-item .amount {
+            color: #334155;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+        .yoy-tooltip {
+            position: absolute;
+            background: #1e293b;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            pointer-events: none;
+            z-index: 100;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .yoy-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #1e293b;
+        }
+        .yoy-content {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .yoy-comparison {
+            flex: 0 0 120px;
+            text-align: center;
+            background: #f8fafc;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        .yoy-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+        .yoy-change {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #15803d;
+        }
+        .yoy-change.down {
+            color: #dc2626;
+        }
+        .yoy-percent {
+            font-size: 12px;
+            margin-top: 4px;
+            color: #15803d;
+        }
+        .yoy-percent .up { color: #15803d; }
+        .yoy-percent .down { color: #dc2626; }
+        .yoy-detail {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-top: 8px;
+        }
+        .yoy-chart-area {
+            flex: 1;
+            position: relative;
+            min-height: 100px;
+        }
+        .yoy-chart-area svg {
+            width: 100%;
+            height: 100px;
+        }
+        .yoy-legend {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            gap: 10px;
+            font-size: 10px;
+            color: #64748b;
+        }
+        .yoy-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .yoy-legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .yoy-legend-dot.prev { background: #94a3b8; }
+        .yoy-legend-dot.curr { background: #3b82f6; }
+        
+        /* YOY 모달 */
+        .yoy-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .yoy-modal {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            width: 90%;
+            max-width: 450px;
+        }
+        .yoy-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .yoy-modal-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .yoy-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+        .yoy-input-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .yoy-input-item label {
+            display: block;
+            font-size: 11px;
+            color: #64748b;
+            margin-bottom: 3px;
+        }
+        .yoy-input-item input {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            font-size: 11px;
+            text-align: right;
+        }
+        .yoy-modal-footer {
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        .yoy-modal-btn {
+            padding: 6px 14px;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .yoy-modal-btn.cancel {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+        }
+        .yoy-modal-btn.save {
+            background: #3b82f6;
+            border: none;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -1341,7 +1594,7 @@
                 </div>
                 
                 <!-- TOP 5 현장 & 전월 대비 (위치 변경: 아래로) -->
-                <div class="analysis-grid" style="margin-top: 20px;">
+                <div class="analysis-grid" style="margin-top: 20px; grid-template-columns: 1fr 1.5fr;">
                     <!-- TOP 5 현장 -->
                     <div class="analysis-card">
                         <div class="analysis-title" style="margin-bottom: 12px;">TOP 5 수익</div>
@@ -1387,20 +1640,70 @@
                         </div>
                     </div>
                     
-                    <!-- 전월 대비 -->
-                    <div class="analysis-card">
-                        <div class="analysis-title">전월 대비 (MoM) <span id="momPeriod" style="font-size: 0.7rem; color: #94a3b8; font-weight: 400;"></span></div>
-                        <div class="mom-grid">
-                            <div class="mom-item">
-                                <div class="mom-label">계약매출</div>
-                                <div class="mom-change up" id="momExpected">-</div>
-                                <div class="mom-detail" id="momExpectedDetail">0 → 0</div>
+                    <!-- 오른쪽: 전월 대비 + 전년 대비 -->
+                    <div class="right-column">
+                        <!-- 전월 대비 -->
+                        <div class="analysis-card" style="padding: 16px;">
+                            <div class="analysis-title" style="margin-bottom: 12px;">전월 대비 (MoM) <span id="momPeriod" style="font-size: 0.7rem; color: #94a3b8; font-weight: 400;"></span></div>
+                            <div class="mom-grid">
+                                <div class="mom-item">
+                                    <div class="mom-label">계약매출</div>
+                                    <div class="mom-change up" id="momExpected">-</div>
+                                    <div class="mom-detail" id="momExpectedDetail">0 → 0</div>
+                                </div>
+                                <div class="mom-item">
+                                    <div class="mom-label">확정매출</div>
+                                    <div class="mom-change new" id="momConfirmed">-</div>
+                                    <div class="mom-detail" id="momConfirmedDetail">0 → 0</div>
+                                </div>
                             </div>
-                            <div class="mom-item">
-                                <div class="mom-label">확정매출</div>
-                                <div class="mom-change new" id="momConfirmed">-</div>
-                                <div class="mom-detail" id="momConfirmedDetail">0 → 0</div>
+                        </div>
+                        
+                        <!-- 전년 대비 (YOY) -->
+                        <div class="yoy-card">
+                            <div class="yoy-header">
+                                <div class="yoy-title">📈 전년 대비 (YoY)</div>
+                                <button class="yoy-edit-btn" onclick="openYoyEditModal()">2025년 수정</button>
                             </div>
+                            <div class="yoy-content">
+                                <div class="yoy-comparison">
+                                    <div class="yoy-label" id="yoyLabel">12월 동월 대비</div>
+                                    <div class="yoy-change" id="yoyChange">-</div>
+                                    <div class="yoy-percent" id="yoyPercent"></div>
+                                    <div class="yoy-detail" id="yoyDetail">0 → 0</div>
+                                </div>
+                                <div class="yoy-chart-area">
+                                    <div class="yoy-legend">
+                                        <div class="yoy-legend-item"><div class="yoy-legend-dot prev"></div>2025</div>
+                                        <div class="yoy-legend-item"><div class="yoy-legend-dot curr"></div>2026</div>
+                                    </div>
+                                    <svg id="yoyChart" viewBox="0 0 550 100"></svg>
+                                    <div id="yoyTooltip" class="yoy-tooltip" style="display:none;"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- 전년도 매출 상세보기 토글 -->
+                            <button class="yoy-toggle-btn" id="yoyToggleBtn" onclick="toggleYoyDetail()">
+                                <span class="arrow">▼</span> 전년도 매출 상세보기
+                            </button>
+                            <div class="yoy-detail-table" id="yoyDetailTable">
+                                <div class="yoy-detail-grid" id="yoyDetailGrid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- YOY 수정 모달 -->
+                <div id="yoyEditModal" class="yoy-modal-overlay" style="display:none;">
+                    <div class="yoy-modal">
+                        <div class="yoy-modal-header">
+                            <div class="yoy-modal-title">2025년 월별 확정매출</div>
+                            <button class="yoy-modal-close" onclick="closeYoyEditModal()">×</button>
+                        </div>
+                        <div class="yoy-input-grid" id="yoyInputGrid"></div>
+                        <div class="yoy-modal-footer">
+                            <button class="yoy-modal-btn cancel" onclick="closeYoyEditModal()">취소</button>
+                            <button class="yoy-modal-btn save" onclick="saveYoyEdit()">저장</button>
                         </div>
                     </div>
                 </div>
@@ -1518,6 +1821,233 @@
         
         // 월별 목표 금액 (수정 가능)
         let MONTHLY_TARGETS = MONTHLY_RATIOS.map(ratio => ratio ? Math.round(TARGET * ratio) : null);
+        
+        // YOY 2025년 데이터 (하드코딩 기본값, localStorage로 수정 가능)
+        const DEFAULT_2025_DATA = [
+            347251288,   // 1월
+            296659467,   // 2월
+            840856438,   // 3월
+            1496258224,  // 4월
+            1898466310,  // 5월
+            1683913895,  // 6월
+            1457165421,  // 7월
+            1034564271,  // 8월
+            1465174118,  // 9월
+            1264239384,  // 10월
+            2304013118,  // 11월
+            0            // 12월
+        ];
+        let yoy2025Data = JSON.parse(localStorage.getItem('yoy2025Data')) || [...DEFAULT_2025_DATA];
+        
+        // YOY 모달 열기
+        function openYoyEditModal() {
+            const grid = document.getElementById('yoyInputGrid');
+            const months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+            grid.innerHTML = months.map((m, i) => `
+                <div class="yoy-input-item">
+                    <label>${m}</label>
+                    <input type="text" id="yoy2025_${i}" value="${Math.round(yoy2025Data[i]/10000).toLocaleString()}" 
+                           placeholder="만원">
+                </div>
+            `).join('');
+            document.getElementById('yoyEditModal').style.display = 'flex';
+        }
+        
+        // YOY 모달 닫기
+        function closeYoyEditModal() {
+            document.getElementById('yoyEditModal').style.display = 'none';
+        }
+        
+        // YOY 데이터 저장
+        function saveYoyEdit() {
+            for (let i = 0; i < 12; i++) {
+                const input = document.getElementById(`yoy2025_${i}`);
+                const val = parseFloat(input.value.replace(/,/g, '')) || 0;
+                yoy2025Data[i] = Math.round(val * 10000); // 만원 → 원
+            }
+            localStorage.setItem('yoy2025Data', JSON.stringify(yoy2025Data));
+            closeYoyEditModal();
+            updateYoySection();
+        }
+        
+        // YOY 섹션 업데이트
+        function updateYoySection() {
+            const now = new Date();
+            const currentMonth = now.getMonth(); // 0-11 (12월이면 11)
+            
+            // 2026년 월별 확정매출 계산
+            const monthly2026 = [0,0,0,0,0,0,0,0,0,0,0,0];
+            if (workbook) {
+                const ws = workbook.Sheets['매출현황'];
+                if (ws) {
+                    const range = XLSX.utils.decode_range(ws['!ref'] || 'A1');
+                    for (let r = 3; r <= range.e.r; r++) {
+                        const statusCell = ws[XLSX.utils.encode_cell({r, c: 10})];
+                        if (statusCell && statusCell.v === '확정') {
+                            const dateCell = ws[XLSX.utils.encode_cell({r, c: 4})];
+                            const amountCell = ws[XLSX.utils.encode_cell({r, c: 8})];
+                            if (dateCell && amountCell) {
+                                let date = null;
+                                if (typeof dateCell.v === 'number') {
+                                    date = excelDateToJSDate(dateCell.v);
+                                } else if (dateCell.v) {
+                                    date = new Date(dateCell.v);
+                                }
+                                if (date && date.getFullYear() === 2026) {
+                                    const month = date.getMonth();
+                                    monthly2026[month] += (amountCell.v || 0);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // 현재월 기준 YOY 비교
+            const prev = yoy2025Data[currentMonth] || 0;
+            const curr = monthly2026[currentMonth] || 0;
+            const diff = curr - prev;
+            const pct = prev > 0 ? ((diff / prev) * 100) : (curr > 0 ? 100 : 0);
+            
+            const changeEl = document.getElementById('yoyChange');
+            if (prev === 0 && curr === 0) {
+                changeEl.textContent = '-';
+                changeEl.className = 'yoy-change';
+            } else {
+                const sign = diff >= 0 ? '+' : '';
+                changeEl.textContent = sign + Math.round(diff/10000).toLocaleString() + '만원';
+                changeEl.className = 'yoy-change' + (diff < 0 ? ' down' : '');
+            }
+            
+            const pctEl = document.getElementById('yoyPercent');
+            if (prev === 0 && curr === 0) {
+                pctEl.innerHTML = '';
+            } else {
+                const pctClass = pct >= 0 ? 'up' : 'down';
+                const pctSign = pct >= 0 ? '▲' : '▼';
+                pctEl.innerHTML = `<span class="${pctClass}">${pctSign} ${Math.abs(pct).toFixed(1)}%</span>`;
+            }
+            
+            document.getElementById('yoyDetail').textContent = 
+                Math.round(prev/10000).toLocaleString() + '만 → ' + Math.round(curr/10000).toLocaleString() + '만';
+            
+            // 라벨 업데이트
+            document.getElementById('yoyLabel').textContent = (currentMonth + 1) + '월 동월 대비';
+            
+            // 차트 그리기
+            drawYoyChart(yoy2025Data, monthly2026);
+        }
+        
+        // YOY 라인 차트 그리기
+        function drawYoyChart(data2025, data2026) {
+            const svg = document.getElementById('yoyChart');
+            if (!svg) return;
+            
+            const width = 550, height = 100;
+            const padding = { top: 25, right: 10, bottom: 20, left: 15 };
+            const chartW = width - padding.left - padding.right;
+            const chartH = height - padding.top - padding.bottom;
+            
+            const allValues = [...data2025, ...data2026].filter(v => v > 0);
+            const maxVal = allValues.length > 0 ? Math.max(...allValues) * 1.2 : 10000000;
+            
+            const xStep = chartW / 11;
+            const getX = i => padding.left + i * xStep;
+            const getY = v => padding.top + chartH - (v / maxVal) * chartH;
+            
+            // 억 단위 포맷 함수
+            const formatEok = (v) => {
+                const eok = v / 100000000;
+                if (eok >= 1) return eok.toFixed(1) + '억';
+                return Math.round(v / 10000).toLocaleString() + '만';
+            };
+            
+            let html = '';
+            
+            // 그리드 라인 (연한 회색)
+            for (let i = 0; i <= 3; i++) {
+                const y = padding.top + (chartH / 3) * i;
+                html += `<line x1="${padding.left}" y1="${y}" x2="${width-padding.right}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/>`;
+            }
+            
+            // X축 레이블 (모든 월)
+            for (let i = 0; i < 12; i++) {
+                html += `<text x="${getX(i)}" y="${height-3}" text-anchor="middle" font-size="9" fill="#94a3b8">${i+1}월</text>`;
+            }
+            
+            // 2025년 라인 (회색)
+            let path2025 = '';
+            data2025.forEach((v, i) => {
+                if (v > 0) {
+                    if (!path2025) path2025 = `M${getX(i)},${getY(v)}`;
+                    else path2025 += ` L${getX(i)},${getY(v)}`;
+                }
+            });
+            if (path2025) {
+                html += `<path d="${path2025}" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>`;
+            }
+            
+            // 2025년 포인트 및 금액 레이블
+            data2025.forEach((v, i) => {
+                if (v > 0) {
+                    html += `<circle cx="${getX(i)}" cy="${getY(v)}" r="3" fill="#94a3b8"/>`;
+                    html += `<text x="${getX(i)}" y="${getY(v) - 7}" text-anchor="middle" font-size="8" fill="#64748b">${formatEok(v)}</text>`;
+                }
+            });
+            
+            // 2026년 라인 (파랑)
+            let path2026 = '';
+            data2026.forEach((v, i) => {
+                if (v > 0) {
+                    if (!path2026) path2026 = `M${getX(i)},${getY(v)}`;
+                    else path2026 += ` L${getX(i)},${getY(v)}`;
+                }
+            });
+            if (path2026) {
+                html += `<path d="${path2026}" fill="none" stroke="#3b82f6" stroke-width="2"/>`;
+            }
+            
+            // 2026년 포인트 및 금액 레이블
+            data2026.forEach((v, i) => {
+                if (v > 0) {
+                    html += `<circle cx="${getX(i)}" cy="${getY(v)}" r="4" fill="#3b82f6"/>`;
+                    html += `<text x="${getX(i)}" y="${getY(v) - 9}" text-anchor="middle" font-size="9" fill="#1d4ed8" font-weight="600">${formatEok(v)}</text>`;
+                }
+            });
+            
+            svg.innerHTML = html;
+        }
+        
+        // 전년도 매출 상세보기 토글
+        function toggleYoyDetail() {
+            const btn = document.getElementById('yoyToggleBtn');
+            const table = document.getElementById('yoyDetailTable');
+            btn.classList.toggle('open');
+            table.classList.toggle('show');
+            
+            if (table.classList.contains('show')) {
+                updateYoyDetailGrid();
+            }
+        }
+        
+        // 전년도 매출 상세 그리드 업데이트
+        function updateYoyDetailGrid() {
+            const grid = document.getElementById('yoyDetailGrid');
+            const months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+            
+            const formatEok = (v) => {
+                const eok = v / 100000000;
+                if (eok >= 1) return eok.toFixed(1) + '억';
+                return Math.round(v / 10000).toLocaleString() + '만';
+            };
+            
+            grid.innerHTML = months.map((m, i) => `
+                <div class="yoy-detail-item">
+                    <div class="month">${m}</div>
+                    <div class="amount">${yoy2025Data[i] > 0 ? formatEok(yoy2025Data[i]) : '-'}</div>
+                </div>
+            `).join('');
+        }
         
         // TOP 5 랭킹 상태
         let currentRankPeriod = 'cumulative';  // 'cumulative' | 'monthly'
@@ -2568,6 +3098,7 @@
             updateSummaryCards(name);
             updateCharts(name);
             updateCategorySummary(name);
+            updateYoySection();
             
             if (name === '전체') {
                 document.getElementById('subTabs').style.display = 'flex';
