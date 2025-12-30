@@ -1227,19 +1227,19 @@
             align-items: center;
         }
         .yoy-comparison {
-            flex: 0 0 120px;
+            flex: 0 0 180px;
             text-align: center;
             background: #f8fafc;
             border-radius: 6px;
-            padding: 15px;
+            padding: 20px 15px;
         }
         .yoy-label {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: #64748b;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
         .yoy-change {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 700;
             color: #15803d;
         }
@@ -1662,7 +1662,7 @@
                         <!-- 전년 대비 (YOY) -->
                         <div class="yoy-card">
                             <div class="yoy-header">
-                                <div class="yoy-title">📈 전년 대비 (YoY)</div>
+                                <div class="yoy-title">전년 대비 (YoY)</div>
                                 <button class="yoy-edit-btn" onclick="openYoyEditModal()">2025년 수정</button>
                             </div>
                             <div class="yoy-content">
@@ -1677,7 +1677,7 @@
                                         <div class="yoy-legend-item"><div class="yoy-legend-dot prev"></div>2025</div>
                                         <div class="yoy-legend-item"><div class="yoy-legend-dot curr"></div>2026</div>
                                     </div>
-                                    <svg id="yoyChart" viewBox="0 0 550 100"></svg>
+                                    <svg id="yoyChart" viewBox="0 0 620 100"></svg>
                                     <div id="yoyTooltip" class="yoy-tooltip" style="display:none;"></div>
                                 </div>
                             </div>
@@ -1943,7 +1943,7 @@
             const svg = document.getElementById('yoyChart');
             if (!svg) return;
             
-            const width = 550, height = 100;
+            const width = 620, height = 100;
             const padding = { top: 25, right: 10, bottom: 20, left: 15 };
             const chartW = width - padding.left - padding.right;
             const chartH = height - padding.top - padding.bottom;
