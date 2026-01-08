@@ -1386,7 +1386,7 @@
         </div>
         
         <div class="category-tabs" id="categoryTabs">
-            <button class="cat-tab active" onclick="showCategory('전체')">전체</button>
+            <button class="cat-tab active" onclick="showCategory('전체')">매출현황</button>
             <button class="cat-tab analysis" onclick="showAnalysis()">📊 매출분석</button>
             <button class="cat-tab" onclick="showCategory('컨설팅')">컨설팅</button>
             <button class="cat-tab" onclick="showCategory('S_N솔루션')">S/N솔루션</button>
@@ -1589,12 +1589,12 @@
                     </div>
                     
                     <div style="font-size: 0.65rem; color: #94a3b8; margin-top: 12px; text-align: center;">
-                        ※ 전년도(2025년) 월별 매출 비중 참고 (12월 미확정)
+                        ※ 전년도(2025년) 월별 매출 비중 참고
                     </div>
                 </div>
                 
                 <!-- TOP 5 현장 & 전월 대비 (위치 변경: 아래로) -->
-                <div class="analysis-grid" style="margin-top: 20px; grid-template-columns: 1fr 1.5fr;">
+                <div class="analysis-grid" style="margin-top: 20px; grid-template-columns: 0.75fr 1.75fr;">
                     <!-- TOP 5 현장 -->
                     <div class="analysis-card">
                         <div class="analysis-title" style="margin-bottom: 12px;">TOP 5 수익</div>
@@ -1659,37 +1659,78 @@
                             </div>
                         </div>
                         
-                        <!-- 전년 대비 (YOY) -->
-                        <div class="yoy-card">
-                            <div class="yoy-header">
-                                <div class="yoy-title">전년 대비 (YoY)</div>
-                                <button class="yoy-edit-btn" onclick="openYoyEditModal()">2025년 수정</button>
+                        <!-- 전년 대비 (YOY) - MOM 스타일 배경 음영 -->
+                        <div class="analysis-card" style="padding: 16px; margin-top: 12px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <div class="analysis-title" style="margin:0;">전년 대비 (YoY)</div>
+                                <button class="yoy-edit-btn" onclick="openYoyEditModal()" style="font-size:0.65rem; padding:4px 8px;">2025년 수정</button>
                             </div>
-                            <div class="yoy-content">
-                                <div class="yoy-comparison">
-                                    <div class="yoy-label" id="yoyLabel">12월 동월 대비</div>
-                                    <div class="yoy-change" id="yoyChange">-</div>
-                                    <div class="yoy-percent" id="yoyPercent"></div>
-                                    <div class="yoy-detail" id="yoyDetail">0 → 0</div>
+                            
+                            <!-- 월 선택 버튼 - 타이틀 아래에 별도 줄 -->
+                            <div style="display:flex; align-items:center; gap:6px; margin-bottom:10px;">
+                                <button onclick="changeYoyMonth(-1)" style="background:#e2e8f0; border:none; border-radius:4px; padding:4px 10px; cursor:pointer; font-size:0.8rem; font-weight:600;">◀</button>
+                                <span id="yoyMonthLabel" style="font-size:0.9rem; font-weight:600; color:#1e293b; min-width:35px; text-align:center;">1월</span>
+                                <button onclick="changeYoyMonth(1)" style="background:#e2e8f0; border:none; border-radius:4px; padding:4px 10px; cursor:pointer; font-size:0.8rem; font-weight:600;">▶</button>
+                            </div>
+                            
+                            <!-- 내용: 왼쪽 금액비교 + 오른쪽 차트 -->
+                            <div style="display:flex; gap:8px;">
+                                <!-- 왼쪽: 금액 비교 (크기 확대) -->
+                                <div style="background:#f8fafc; border-radius:8px; padding:10px 14px; min-width:120px;">
+                                    <!-- 전년동월 | 올해 나란히 -->
+                                    <div style="display:flex; gap:15px; margin-bottom:12px;">
+                                        <div style="text-align:center;">
+                                            <div style="font-size:0.55rem; color:#94a3b8; margin-bottom:2px;">전년동월</div>
+                                            <div id="yoyPrevAmount" style="font-size:1rem; font-weight:700; color:#64748b;">-</div>
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <div style="font-size:0.55rem; color:#94a3b8; margin-bottom:2px;" id="yoyCurrLabel">올해</div>
+                                            <div id="yoyCurrAmount" style="font-size:1rem; font-weight:700; color:#3b82f6;">-</div>
+                                        </div>
+                                    </div>
+                                    <!-- 증감 표시 (하단) -->
+                                    <div style="text-align:center; border-top:1px solid #e2e8f0; padding-top:8px;">
+                                        <div class="yoy-change" id="yoyChange" style="font-size:0.9rem; font-weight:700;">-</div>
+                                        <div class="yoy-percent" id="yoyPercent" style="font-size:0.6rem;"></div>
+                                    </div>
                                 </div>
-                                <div class="yoy-chart-area">
-                                    <div class="yoy-legend">
+                                
+                                <!-- 오른쪽: 차트 영역 (클릭하여 확대) -->
+                                <div id="yoyChartContainer" style="flex:1; position:relative; min-width:0; background:#f8fafc; border-radius:8px; padding:2px 0; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.boxShadow='0 0 8px rgba(59,130,246,0.3)'; document.getElementById('yoyChartHint').style.opacity='1';" onmouseout="this.style.boxShadow='none'; document.getElementById('yoyChartHint').style.opacity='0';" onclick="openYoyChartModal()">
+                                    <div id="yoyChartHint" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:0.6rem; color:#3b82f6; background:rgba(255,255,255,0.95); padding:4px 8px; border-radius:4px; box-shadow:0 2px 6px rgba(0,0,0,0.1); opacity:0; transition:opacity 0.2s; pointer-events:none; z-index:10;">🔍 클릭하여 확대</div>
+                                    <div class="yoy-legend" style="position:absolute; top:2px; right:5px; display:flex; gap:6px; font-size:0.5rem;">
                                         <div class="yoy-legend-item"><div class="yoy-legend-dot prev"></div>2025</div>
                                         <div class="yoy-legend-item"><div class="yoy-legend-dot curr"></div>2026</div>
                                     </div>
-                                    <svg id="yoyChart" viewBox="0 0 620 100"></svg>
-                                    <div id="yoyTooltip" class="yoy-tooltip" style="display:none;"></div>
+                                    <svg id="yoyChart" viewBox="0 0 550 95" style="width:100%; height:95px;"></svg>
                                 </div>
                             </div>
                             
                             <!-- 전년도 매출 상세보기 토글 -->
-                            <button class="yoy-toggle-btn" id="yoyToggleBtn" onclick="toggleYoyDetail()">
+                            <button class="yoy-toggle-btn" id="yoyToggleBtn" onclick="toggleYoyDetail()" style="font-size:0.7rem; padding:6px 0;">
                                 <span class="arrow">▼</span> 전년도 매출 상세보기
                             </button>
                             <div class="yoy-detail-table" id="yoyDetailTable">
                                 <div class="yoy-detail-grid" id="yoyDetailGrid"></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                
+                <!-- YOY 차트 확대 모달 -->
+                <div id="yoyChartModal" onclick="if(event.target===this) closeYoyChartModal();" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:2000; justify-content:center; align-items:center;">
+                    <div style="background:white; border-radius:12px; padding:20px 25px; box-shadow:0 10px 40px rgba(0,0,0,0.2); max-width:95vw; max-height:90vh; overflow:auto;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                            <div style="font-weight:600; font-size:1.1rem; color:#1e293b;">전년 대비 (YoY) 상세</div>
+                            <div style="display:flex; align-items:center; gap:15px;">
+                                <div style="display:flex; gap:12px; font-size:0.75rem;">
+                                    <div style="display:flex; align-items:center; gap:4px;"><div style="width:10px; height:10px; background:#94a3b8; border-radius:50%;"></div>2025</div>
+                                    <div style="display:flex; align-items:center; gap:4px;"><div style="width:10px; height:10px; background:#3b82f6; border-radius:50%;"></div>2026</div>
+                                </div>
+                                <button onclick="closeYoyChartModal()" style="background:#f1f5f9; border:none; border-radius:6px; padding:6px 14px; cursor:pointer; font-size:0.85rem; color:#64748b;">✕ 닫기</button>
+                            </div>
+                        </div>
+                        <svg id="yoyChartLarge" viewBox="0 0 900 280" style="width:900px; height:280px;"></svg>
                     </div>
                 </div>
                 
@@ -1795,28 +1836,28 @@
         
         const TARGET = 23000000000;
         
-        // 2025년 월별 매출 비중 기반 목표 배분 (12월 미확정, 11개월 기준)
+        // 2025년 월별 매출 비중 기반 목표 배분 (12월 838,125,366원 예상 포함)
         /*
          * ============================================
          * 월별 목표 비율 설정 (수정 가능)
-         * - 2025년 월별 매출 비중 기준
-         * - 비율 합계가 1.0(100%)이 되도록 조정
-         * - 12월은 미확정으로 null 처리
+         * - 2025년 월별 매출 비중 기준 (12월 포함)
+         * - 연간 총합: 14,926,687,300원
+         * - 비율 합계가 1.0(100%)
          * ============================================
          */
         const MONTHLY_RATIOS = [
-            0.0246,  // 1월: 2.5%
-            0.0211,  // 2월: 2.1%
-            0.0597,  // 3월: 6.0%
-            0.1062,  // 4월: 10.6%
-            0.1348,  // 5월: 13.5%
-            0.1195,  // 6월: 12.0%
-            0.1034,  // 7월: 10.3%
-            0.0734,  // 8월: 7.3%
-            0.1040,  // 9월: 10.4%
-            0.0897,  // 10월: 9.0%
-            0.1635,  // 11월: 16.4%
-            null     // 12월: 미확정
+            0.0233,  // 1월: 2.3%
+            0.0199,  // 2월: 2.0%
+            0.0563,  // 3월: 5.6%
+            0.1002,  // 4월: 10.0%
+            0.1272,  // 5월: 12.7%
+            0.1128,  // 6월: 11.3%
+            0.0976,  // 7월: 9.8%
+            0.0693,  // 8월: 6.9%
+            0.0982,  // 9월: 9.8%
+            0.0847,  // 10월: 8.5%
+            0.1544,  // 11월: 15.4%
+            0.0561   // 12월: 5.6%
         ];
         
         // 월별 목표 금액 (수정 가능)
@@ -1835,7 +1876,7 @@
             1465174118,  // 9월
             1264239384,  // 10월
             2304013118,  // 11월
-            0            // 12월
+            838125366    // 12월 (예상)
         ];
         let yoy2025Data = JSON.parse(localStorage.getItem('yoy2025Data')) || [...DEFAULT_2025_DATA];
         
@@ -1870,72 +1911,125 @@
             updateYoySection();
         }
         
+        // 선택한 YOY 비교 월 (0-11)
+        let selectedYoyMonth = new Date().getMonth();
+        
+        // 월 변경 함수
+        function changeYoyMonth(delta) {
+            selectedYoyMonth = (selectedYoyMonth + delta + 12) % 12;
+            updateYoySection();
+        }
+        
         // YOY 섹션 업데이트
         function updateYoySection() {
             const now = new Date();
-            const currentMonth = now.getMonth(); // 0-11 (12월이면 11)
+            const currentDay = now.getDate();  // 오늘 일자 (1~31)
+            const currentMonth = now.getMonth();  // 현재 월 (0~11)
+            const monthNames = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
             
-            // 2026년 월별 확정매출 계산
-            const monthly2026 = [0,0,0,0,0,0,0,0,0,0,0,0];
-            if (workbook) {
-                const ws = workbook.Sheets['매출현황'];
-                if (ws) {
-                    const range = XLSX.utils.decode_range(ws['!ref'] || 'A1');
-                    for (let r = 3; r <= range.e.r; r++) {
-                        const statusCell = ws[XLSX.utils.encode_cell({r, c: 10})];
-                        if (statusCell && statusCell.v === '확정') {
-                            const dateCell = ws[XLSX.utils.encode_cell({r, c: 4})];
-                            const amountCell = ws[XLSX.utils.encode_cell({r, c: 8})];
-                            if (dateCell && amountCell) {
-                                let date = null;
-                                if (typeof dateCell.v === 'number') {
-                                    date = excelDateToJSDate(dateCell.v);
-                                } else if (dateCell.v) {
-                                    date = new Date(dateCell.v);
-                                }
-                                if (date && date.getFullYear() === 2026) {
-                                    const month = date.getMonth();
-                                    monthly2026[month] += (amountCell.v || 0);
-                                }
+            // 2026년 월별 확정매출 계산 (전체 + N일 기준)
+            const monthly2026Full = [0,0,0,0,0,0,0,0,0,0,0,0];
+            const monthly2026ByDay = [0,0,0,0,0,0,0,0,0,0,0,0];  // N일 기준
+            
+            // 각 카테고리별로 데이터 집계
+            Object.keys(categoryConfig).forEach(sheetName => {
+                const data = allData[sheetName] || [];
+                const config = categoryConfig[sheetName];
+                
+                data.forEach(row => {
+                    const salesAmt = parseNumber(row[config.salesAmountCol]);
+                    const salesDateVal = row[config.salesDateCol];
+                    const salesDate = excelDateToJSDate(salesDateVal);
+                    
+                    if (salesDate && salesDate.getFullYear() === 2026 && salesAmt > 0) {
+                        const month = salesDate.getMonth();
+                        const day = salesDate.getDate();
+                        monthly2026Full[month] += salesAmt;
+                        
+                        // N일 기준: 선택한 월이 현재 월이면 오늘까지, 아니면 전체
+                        if (month === selectedYoyMonth) {
+                            if (month === currentMonth && day <= currentDay) {
+                                monthly2026ByDay[month] += salesAmt;
+                            } else if (month < currentMonth) {
+                                monthly2026ByDay[month] += salesAmt;
+                            } else if (month === currentMonth) {
+                                if (day <= currentDay) monthly2026ByDay[month] += salesAmt;
                             }
+                        } else {
+                            monthly2026ByDay[month] += salesAmt;
                         }
                     }
-                }
+                });
+            });
+            
+            // 선택한 월의 올해 데이터 (N일 기준)
+            let currAmount;
+            let dayLabel;
+            if (selectedYoyMonth === currentMonth) {
+                // 현재 월이면 오늘 날짜까지만
+                currAmount = monthly2026ByDay[selectedYoyMonth];
+                dayLabel = `올해(${currentDay}일)`;
+            } else if (selectedYoyMonth < currentMonth) {
+                // 지난 월이면 전체
+                currAmount = monthly2026Full[selectedYoyMonth];
+                dayLabel = '올해';
+            } else {
+                // 미래 월이면 데이터 없음
+                currAmount = monthly2026Full[selectedYoyMonth];
+                dayLabel = '올해';
             }
             
-            // 현재월 기준 YOY 비교
-            const prev = yoy2025Data[currentMonth] || 0;
-            const curr = monthly2026[currentMonth] || 0;
-            const diff = curr - prev;
-            const pct = prev > 0 ? ((diff / prev) * 100) : (curr > 0 ? 100 : 0);
+            // 전년동월 (전체)
+            const prevAmount = yoy2025Data[selectedYoyMonth] || 0;
             
+            // 차이 계산
+            const diff = currAmount - prevAmount;
+            const pct = prevAmount > 0 ? ((diff / prevAmount) * 100) : (currAmount > 0 ? 100 : 0);
+            
+            // UI 업데이트
+            document.getElementById('yoyMonthLabel').textContent = monthNames[selectedYoyMonth];
+            document.getElementById('yoyCurrLabel').textContent = dayLabel;
+            
+            // 금액 표시 (소수점 1자리까지)
+            const formatAmount = (val) => {
+                if (val <= 0) return '-';
+                if (val >= 100000000) {
+                    const eok = val / 100000000;
+                    return eok.toFixed(1) + '억';
+                } else {
+                    return Math.round(val / 10000).toLocaleString() + '만원';
+                }
+            };
+            
+            document.getElementById('yoyPrevAmount').textContent = formatAmount(prevAmount);
+            document.getElementById('yoyCurrAmount').textContent = formatAmount(currAmount);
+            
+            // 증감 표시
             const changeEl = document.getElementById('yoyChange');
-            if (prev === 0 && curr === 0) {
+            if (prevAmount === 0 && currAmount === 0) {
                 changeEl.textContent = '-';
                 changeEl.className = 'yoy-change';
+                changeEl.style.color = '#64748b';
             } else {
                 const sign = diff >= 0 ? '+' : '';
                 changeEl.textContent = sign + Math.round(diff/10000).toLocaleString() + '만원';
-                changeEl.className = 'yoy-change' + (diff < 0 ? ' down' : '');
+                // 마이너스는 부드러운 회색으로, 플러스만 녹색으로
+                changeEl.style.color = diff >= 0 ? '#10b981' : '#94a3b8';
             }
             
             const pctEl = document.getElementById('yoyPercent');
-            if (prev === 0 && curr === 0) {
+            if (prevAmount === 0 && currAmount === 0) {
                 pctEl.innerHTML = '';
             } else {
-                const pctClass = pct >= 0 ? 'up' : 'down';
                 const pctSign = pct >= 0 ? '▲' : '▼';
-                pctEl.innerHTML = `<span class="${pctClass}">${pctSign} ${Math.abs(pct).toFixed(1)}%</span>`;
+                // 마이너스는 부드러운 회색으로
+                const pctColor = pct >= 0 ? '#10b981' : '#94a3b8';
+                pctEl.innerHTML = `<span style="color:${pctColor}; font-size:0.85rem;">${pctSign} ${Math.abs(pct).toFixed(1)}%</span>`;
             }
             
-            document.getElementById('yoyDetail').textContent = 
-                Math.round(prev/10000).toLocaleString() + '만 → ' + Math.round(curr/10000).toLocaleString() + '만';
-            
-            // 라벨 업데이트
-            document.getElementById('yoyLabel').textContent = (currentMonth + 1) + '월 동월 대비';
-            
-            // 차트 그리기
-            drawYoyChart(yoy2025Data, monthly2026);
+            // 차트 그리기 (전체 데이터 기준)
+            window.monthly2026Full = monthly2026Full;  // 확대 모달에서 사용
+            drawYoyChart(yoy2025Data, monthly2026Full);
         }
         
         // YOY 라인 차트 그리기
@@ -1943,39 +2037,41 @@
             const svg = document.getElementById('yoyChart');
             if (!svg) return;
             
-            const width = 620, height = 100;
-            const padding = { top: 25, right: 10, bottom: 20, left: 15 };
+            const width = 550, height = 95;
+            const padding = { top: 14, right: 5, bottom: 14, left: 5 };
             const chartW = width - padding.left - padding.right;
             const chartH = height - padding.top - padding.bottom;
             
             const allValues = [...data2025, ...data2026].filter(v => v > 0);
-            const maxVal = allValues.length > 0 ? Math.max(...allValues) * 1.2 : 10000000;
+            const maxVal = allValues.length > 0 ? Math.max(...allValues) * 1.3 : 10000000;
             
             const xStep = chartW / 11;
             const getX = i => padding.left + i * xStep;
             const getY = v => padding.top + chartH - (v / maxVal) * chartH;
             
-            // 억 단위 포맷 함수
+            // 억 단위 포맷 함수 (소수점 1자리)
             const formatEok = (v) => {
                 const eok = v / 100000000;
                 if (eok >= 1) return eok.toFixed(1) + '억';
-                return Math.round(v / 10000).toLocaleString() + '만';
+                return Math.round(v / 10000) + '만';
             };
             
             let html = '';
             
             // 그리드 라인 (연한 회색)
-            for (let i = 0; i <= 3; i++) {
-                const y = padding.top + (chartH / 3) * i;
+            for (let i = 0; i <= 2; i++) {
+                const y = padding.top + (chartH / 2) * i;
                 html += `<line x1="${padding.left}" y1="${y}" x2="${width-padding.right}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/>`;
             }
             
-            // X축 레이블 (모든 월)
+            // X축 레이블 (모든 월) - 12월은 (예상) 표시
+            const monthLabels = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월(예상)'];
             for (let i = 0; i < 12; i++) {
-                html += `<text x="${getX(i)}" y="${height-3}" text-anchor="middle" font-size="9" fill="#94a3b8">${i+1}월</text>`;
+                const fontSize = i === 11 ? 6 : 8;
+                html += `<text x="${getX(i)}" y="${height-1}" text-anchor="middle" font-size="${fontSize}" fill="#94a3b8">${monthLabels[i]}</text>`;
             }
             
-            // 2025년 라인 (회색)
+            // 2025년 라인 (회색 점선)
             let path2025 = '';
             data2025.forEach((v, i) => {
                 if (v > 0) {
@@ -1984,18 +2080,17 @@
                 }
             });
             if (path2025) {
-                html += `<path d="${path2025}" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>`;
+                html += `<path d="${path2025}" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,2"/>`;
             }
             
-            // 2025년 포인트 및 금액 레이블
+            // 2025년 포인트
             data2025.forEach((v, i) => {
                 if (v > 0) {
-                    html += `<circle cx="${getX(i)}" cy="${getY(v)}" r="3" fill="#94a3b8"/>`;
-                    html += `<text x="${getX(i)}" y="${getY(v) - 7}" text-anchor="middle" font-size="8" fill="#64748b">${formatEok(v)}</text>`;
+                    html += `<circle cx="${getX(i)}" cy="${getY(v)}" r="2.5" fill="#64748b"/>`;
                 }
             });
             
-            // 2026년 라인 (파랑)
+            // 2026년 라인 (파랑 실선)
             let path2026 = '';
             data2026.forEach((v, i) => {
                 if (v > 0) {
@@ -2007,13 +2102,148 @@
                 html += `<path d="${path2026}" fill="none" stroke="#3b82f6" stroke-width="2"/>`;
             }
             
-            // 2026년 포인트 및 금액 레이블
+            // 2026년 포인트
             data2026.forEach((v, i) => {
                 if (v > 0) {
-                    html += `<circle cx="${getX(i)}" cy="${getY(v)}" r="4" fill="#3b82f6"/>`;
-                    html += `<text x="${getX(i)}" y="${getY(v) - 9}" text-anchor="middle" font-size="9" fill="#1d4ed8" font-weight="600">${formatEok(v)}</text>`;
+                    html += `<circle cx="${getX(i)}" cy="${getY(v)}" r="3.5" fill="#3b82f6"/>`;
                 }
             });
+            
+            // 레이블 (겹침 방지)
+            for (let i = 0; i < 12; i++) {
+                const v2025 = data2025[i] || 0;
+                const v2026 = data2026[i] || 0;
+                
+                if (v2025 > 0 && v2026 > 0) {
+                    const y2025 = getY(v2025);
+                    const y2026 = getY(v2026);
+                    
+                    if (v2025 > v2026) {
+                        html += `<text x="${getX(i)}" y="${y2025 - 5}" text-anchor="middle" font-size="8" fill="#475569" font-weight="500">${formatEok(v2025)}</text>`;
+                        html += `<text x="${getX(i)}" y="${y2026 + 10}" text-anchor="middle" font-size="9" fill="#1d4ed8" font-weight="600">${formatEok(v2026)}</text>`;
+                    } else {
+                        html += `<text x="${getX(i)}" y="${y2026 - 5}" text-anchor="middle" font-size="9" fill="#1d4ed8" font-weight="600">${formatEok(v2026)}</text>`;
+                        html += `<text x="${getX(i)}" y="${y2025 + 10}" text-anchor="middle" font-size="8" fill="#475569" font-weight="500">${formatEok(v2025)}</text>`;
+                    }
+                } else if (v2025 > 0) {
+                    html += `<text x="${getX(i)}" y="${getY(v2025) - 5}" text-anchor="middle" font-size="8" fill="#475569" font-weight="500">${formatEok(v2025)}</text>`;
+                } else if (v2026 > 0) {
+                    html += `<text x="${getX(i)}" y="${getY(v2026) - 5}" text-anchor="middle" font-size="9" fill="#1d4ed8" font-weight="600">${formatEok(v2026)}</text>`;
+                }
+            }
+            
+            svg.innerHTML = html;
+        }
+        
+        // YOY 차트 확대 모달 열기
+        function openYoyChartModal() {
+            const modal = document.getElementById('yoyChartModal');
+            modal.style.display = 'flex';
+            drawYoyChartLarge(yoy2025Data, window.monthly2026Full || Array(12).fill(0));
+        }
+        
+        // YOY 차트 확대 모달 닫기
+        function closeYoyChartModal() {
+            document.getElementById('yoyChartModal').style.display = 'none';
+        }
+        
+        // 확대된 YOY 차트 그리기
+        function drawYoyChartLarge(data2025, data2026) {
+            const svg = document.getElementById('yoyChartLarge');
+            if (!svg) return;
+            
+            const width = 900, height = 280;
+            const padding = { top: 35, right: 40, bottom: 35, left: 40 };
+            const chartW = width - padding.left - padding.right;
+            const chartH = height - padding.top - padding.bottom;
+            
+            const allValues = [...data2025, ...data2026].filter(v => v > 0);
+            const maxVal = allValues.length > 0 ? Math.max(...allValues) * 1.2 : 10000000;
+            
+            const xStep = chartW / 11;
+            const getX = i => padding.left + i * xStep;
+            const getY = v => padding.top + chartH - (v / maxVal) * chartH;
+            
+            const formatEok = (v) => {
+                const eok = v / 100000000;
+                if (eok >= 1) return eok.toFixed(1) + '억';
+                return Math.round(v / 10000).toLocaleString() + '만';
+            };
+            
+            let html = '';
+            
+            // 그리드 라인
+            for (let i = 0; i <= 4; i++) {
+                const y = padding.top + (chartH / 4) * i;
+                html += `<line x1="${padding.left}" y1="${y}" x2="${width-padding.right}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/>`;
+            }
+            
+            // X축 레이블
+            const monthLabels = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월(예상)'];
+            for (let i = 0; i < 12; i++) {
+                html += `<text x="${getX(i)}" y="${height - 10}" text-anchor="middle" font-size="13" fill="#64748b">${monthLabels[i]}</text>`;
+            }
+            
+            // 2025년 라인 (회색 점선)
+            let path2025 = '';
+            data2025.forEach((v, i) => {
+                if (v > 0) {
+                    if (!path2025) path2025 = `M${getX(i)},${getY(v)}`;
+                    else path2025 += ` L${getX(i)},${getY(v)}`;
+                }
+            });
+            if (path2025) {
+                html += `<path d="${path2025}" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-dasharray="6,4"/>`;
+            }
+            
+            // 2025년 포인트
+            data2025.forEach((v, i) => {
+                if (v > 0) {
+                    html += `<circle cx="${getX(i)}" cy="${getY(v)}" r="6" fill="#64748b"/>`;
+                }
+            });
+            
+            // 2026년 라인 (파랑 실선)
+            let path2026 = '';
+            data2026.forEach((v, i) => {
+                if (v > 0) {
+                    if (!path2026) path2026 = `M${getX(i)},${getY(v)}`;
+                    else path2026 += ` L${getX(i)},${getY(v)}`;
+                }
+            });
+            if (path2026) {
+                html += `<path d="${path2026}" fill="none" stroke="#3b82f6" stroke-width="3"/>`;
+            }
+            
+            // 2026년 포인트
+            data2026.forEach((v, i) => {
+                if (v > 0) {
+                    html += `<circle cx="${getX(i)}" cy="${getY(v)}" r="7" fill="#3b82f6"/>`;
+                }
+            });
+            
+            // 레이블 (겹침 방지)
+            for (let i = 0; i < 12; i++) {
+                const v2025 = data2025[i] || 0;
+                const v2026 = data2026[i] || 0;
+                
+                if (v2025 > 0 && v2026 > 0) {
+                    const y2025 = getY(v2025);
+                    const y2026 = getY(v2026);
+                    
+                    if (v2025 > v2026) {
+                        html += `<text x="${getX(i)}" y="${y2025 - 12}" text-anchor="middle" font-size="12" fill="#475569" font-weight="500">${formatEok(v2025)}</text>`;
+                        html += `<text x="${getX(i)}" y="${y2026 + 18}" text-anchor="middle" font-size="13" fill="#1d4ed8" font-weight="600">${formatEok(v2026)}</text>`;
+                    } else {
+                        html += `<text x="${getX(i)}" y="${y2026 - 12}" text-anchor="middle" font-size="13" fill="#1d4ed8" font-weight="600">${formatEok(v2026)}</text>`;
+                        html += `<text x="${getX(i)}" y="${y2025 + 18}" text-anchor="middle" font-size="12" fill="#475569" font-weight="500">${formatEok(v2025)}</text>`;
+                    }
+                } else if (v2025 > 0) {
+                    html += `<text x="${getX(i)}" y="${getY(v2025) - 12}" text-anchor="middle" font-size="12" fill="#475569" font-weight="500">${formatEok(v2025)}</text>`;
+                } else if (v2026 > 0) {
+                    html += `<text x="${getX(i)}" y="${getY(v2026) - 12}" text-anchor="middle" font-size="13" fill="#1d4ed8" font-weight="600">${formatEok(v2026)}</text>`;
+                }
+            }
             
             svg.innerHTML = html;
         }
@@ -3004,7 +3234,7 @@
                             order: 2
                         },
                         {
-                            label: '현재달성매출',
+                            label: '달성매출',
                             data: actualData,
                             backgroundColor: '#3b82f6',
                             borderWidth: 0,
@@ -3016,6 +3246,10 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
                     plugins: {
                         legend: {
                             display: false
@@ -3023,7 +3257,8 @@
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return context.dataset.label + ': ' + Math.round(context.raw) + '억';
+                                    const value = context.raw.toFixed(1);
+                                    return context.dataset.label + ' : ' + value + '억';
                                 }
                             }
                         }
@@ -3323,7 +3558,7 @@
         }
         
         function updateCharts(category) {
-            const monthlyExpected = Array(12).fill(0);
+            const monthlyExpected = Array(13).fill(0);  // 25년12월 + 1~12월
             const monthlyConfirmed = Array(12).fill(0);
             const categoryData = {};
             
@@ -3335,13 +3570,18 @@
                 let total = 0;
                 
                 data.forEach(row => {
-                    // 계약매출: 계약일 있으면 계약금액 합산 (2026년만)
+                    // 계약매출: 계약일 있으면 계약금액 합산 (2025년12월 + 2026년)
                     const contractAmt = parseNumber(findColumn(row, config.contractAmountCol));
                     const contractDateVal = findColumn(row, config.contractDateCol);
                     const contractDate = excelDateToJSDate(contractDateVal);
-                    if (contractDate && contractDate.getFullYear() === 2026 && contractAmt > 0) {
+                    if (contractDate && contractAmt > 0) {
+                        const year = contractDate.getFullYear();
                         const month = contractDate.getMonth();
-                        monthlyExpected[month] += contractAmt;
+                        if (year === 2025 && month === 11) {
+                            monthlyExpected[0] += contractAmt;  // 25년12월 = 인덱스 0
+                        } else if (year === 2026) {
+                            monthlyExpected[month + 1] += contractAmt;  // 26년 1월 = 인덱스 1
+                        }
                     }
                     
                     // 확정매출: 매출일 있으면 매출금액 합산 (2026년만)
@@ -3367,22 +3607,33 @@
             
             let datasets = [];
             
+            // 레이블 설정: 계약매출은 13개, 확정매출은 12개
+            const labels13 = ['25년12월','1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+            const labels12 = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+            
+            let chartLabels, chartDatasets;
+            
             if (chartMode === 'confirmed') {
-                datasets = [{
+                chartLabels = labels12;
+                chartDatasets = [{
                     label: '확정매출',
                     data: monthlyConfirmed,
                     backgroundColor: 'rgba(84, 130, 53, 0.7)',
                     borderWidth: 0
                 }];
             } else if (chartMode === 'expected') {
-                datasets = [{
+                chartLabels = labels13;
+                chartDatasets = [{
                     label: '계약매출',
                     data: monthlyExpected,
                     backgroundColor: 'rgba(102, 126, 234, 0.7)',
                     borderWidth: 0
                 }];
             } else {
-                datasets = [
+                // 둘 다 표시: 계약매출 13개, 확정매출 12개 (25년12월은 0)
+                chartLabels = labels13;
+                const confirmedWith13 = [0, ...monthlyConfirmed];  // 25년12월 확정매출 = 0
+                chartDatasets = [
                     {
                         label: '계약매출',
                         data: monthlyExpected,
@@ -3391,7 +3642,7 @@
                     },
                     {
                         label: '확정매출',
-                        data: monthlyConfirmed,
+                        data: confirmedWith13,
                         backgroundColor: 'rgba(84, 130, 53, 0.7)',
                         borderWidth: 0
                     }
@@ -3401,8 +3652,8 @@
             monthlyChart = new Chart(ctx1, {
                 type: 'bar',
                 data: {
-                    labels: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
-                    datasets: datasets
+                    labels: chartLabels,
+                    datasets: chartDatasets
                 },
                 options: {
                     responsive: true,
@@ -3437,9 +3688,17 @@
             
             let labelsHtml = '<div class="chart-labels" style="display:flex; justify-content:space-between; padding:0 45px 0 55px; margin-top:5px;">';
             
-            for (let idx = 0; idx < 12; idx++) {
-                const expectedVal = monthlyExpected[idx];
-                const confirmedVal = monthlyConfirmed[idx];
+            // 차트 모드에 따라 레이블 개수 결정
+            const labelCount = (chartMode === 'confirmed') ? 12 : 13;
+            for (let idx = 0; idx < labelCount; idx++) {
+                let expectedVal, confirmedVal;
+                if (chartMode === 'confirmed') {
+                    expectedVal = 0;
+                    confirmedVal = monthlyConfirmed[idx];
+                } else {
+                    expectedVal = monthlyExpected[idx];
+                    confirmedVal = (idx === 0) ? 0 : monthlyConfirmed[idx - 1];  // 25년12월 확정=0
+                }
                 
                 const formatValue = (val) => {
                     if (val <= 0) return '-';
@@ -3467,7 +3726,8 @@
                 }
                 
                 const fontSize = chartMode === 'both' ? '0.55rem' : '0.7rem';
-                labelsHtml += `<span style="font-size:${fontSize}; color:#333; font-weight:600; width:60px; text-align:center;">${displayVal}</span>`;
+                const labelWidth = labelCount === 13 ? '52px' : '60px';
+                labelsHtml += `<span style="font-size:${fontSize}; color:#333; font-weight:600; width:${labelWidth}; text-align:center;">${displayVal}</span>`;
             }
             labelsHtml += '</div>';
             
