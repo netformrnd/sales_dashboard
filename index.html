@@ -133,26 +133,39 @@
             font-weight: 500;
             font-size: 0.85rem;
             transition: all 0.2s;
-            color: #6b7280;
+            color: #9ca3af;
             position: relative;
             margin-bottom: -2px;
         }
         
         .cat-tab.active { 
             background: white;
-            color: #111827;
-            border: 2px solid #d1d5db;
-            border-bottom: 2px solid white;
-            box-shadow: 0 -3px 10px rgba(0,0,0,0.06);
+            color: #2563eb;
+            font-weight: 700;
+            border: 2px solid #e2e8f0;
+            border-bottom: 3px solid white;
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.08);
         }
+        
+        .cat-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: #2563eb;
+            border-radius: 3px 3px 0 0;
+        }
+        
         .cat-tab:hover:not(.active) { 
             color: #374151;
-            background: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.7);
         }
         
         .summary-cards {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            grid-template-columns: 1fr 1fr 1fr 1.8fr 1fr 1fr;
             gap: 10px;
             margin-bottom: 15px;
         }
@@ -652,14 +665,18 @@
         .cat-tab.analysis {
             color: #0d9488;
         }
-        .cat-tab.analysis:hover {
+        .cat-tab.analysis:hover:not(.active) {
             background: rgba(13, 148, 136, 0.1);
         }
         .cat-tab.analysis.active {
             background: #f0fdfa;
             color: #0d9488;
+            font-weight: 700;
             border-color: #99f6e4;
             border-bottom-color: #f0fdfa;
+        }
+        .cat-tab.analysis.active::after {
+            background: #0d9488;
         }
         
         /* 전월비 배지 */
@@ -867,8 +884,12 @@
         .ranking-row {
             display: flex;
             align-items: center;
-            padding: 12px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+        }
+        .ranking-row:hover {
+            background: #f8fafc;
         }
         .ranking-row:last-child { border-bottom: none; }
         
@@ -934,7 +955,7 @@
         .category-summary-section {
             background: white;
             border-radius: 12px;
-            padding: 20px;
+            padding: 24px;
             margin-bottom: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
@@ -946,6 +967,28 @@
             margin-bottom: 16px;
         }
         
+        /* 카테고리 컬러 점 */
+        .category-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .dot-consulting { background: #3b82f6; }
+        .dot-solution { background: #8b5cf6; }
+        .dot-patent { background: #10b981; }
+        .dot-material { background: #f97316; }
+        .dot-forestore { background: #ec4899; }
+        .dot-grohome { background: #06b6d4; }
+        .dot-moyeradeal { background: #94a3b8; }
+        
+        .category-name {
+            display: flex;
+            align-items: center;
+        }
+        
         /* 스타일 D: 심플 라인 표 */
         .cat-summary-table {
             width: 100%;
@@ -955,19 +998,22 @@
         
         .cat-summary-table thead th {
             padding: 12px 16px;
-            text-align: center;
+            text-align: right;
             font-weight: 600;
-            color: #1e40af;
-            background: #e0f2fe;
-            border-bottom: 2px solid #1e293b;
-            font-size: 0.8rem;
+            color: #64748b;
+            background: #f8fafc;
+            border-bottom: 2px solid #e2e8f0;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .cat-summary-table thead th:first-child {
             text-align: left;
         }
         
-        .cat-summary-table thead th:last-child {
+        .cat-summary-table thead th:nth-child(2) {
+            text-align: center;
         }
         
         .cat-summary-table thead th.amount-header {
@@ -976,7 +1022,7 @@
         
         .cat-summary-table tbody tr {
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
         
         .cat-summary-table tbody tr:hover {
@@ -985,7 +1031,7 @@
         
         .cat-summary-table tbody td {
             padding: 14px 16px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #f1f5f9;
             font-size: 0.85rem;
             color: #1e293b;
         }
@@ -1005,6 +1051,12 @@
             color: #1e293b;
             font-family: 'Inter', sans-serif;
             text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .cat-summary-table .amount-cell.highlight {
+            color: #2563eb;
+            font-weight: 700;
         }
         
         .cat-summary-table .amount-cell.warning {
@@ -1013,6 +1065,7 @@
         
         .cat-summary-table .amount-cell.zero {
             color: #cbd5e1;
+            font-weight: 400;
         }
         
         .cat-summary-table tbody tr.total-row {
@@ -1026,8 +1079,16 @@
         
         .cat-summary-table tbody tr.total-row td {
             font-weight: 700;
-            border-bottom: 2px solid #1e293b;
-            border-top: 1px solid #1e293b;
+            border-top: 2px solid #e2e8f0;
+            border-bottom: none;
+        }
+        
+        .cat-summary-table tbody tr.total-row td:first-child {
+            padding-left: 16px;
+        }
+        
+        .cat-summary-table tbody tr.total-row .amount-cell.highlight {
+            color: #2563eb;
         }
         
         .cat-summary-table tbody tr.total-row .amount-cell.warning {
@@ -1037,19 +1098,65 @@
         /* 월별 테이블 전용 스타일 */
         .monthly-cat-table thead th,
         .monthly-cat-table tbody td {
-            padding: 10px 8px;
+            padding: 12px 10px;
             font-size: 0.75rem;
+        }
+        
+        .monthly-cat-table thead th {
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e2e8f0;
         }
         
         .monthly-cat-table thead th:first-child,
         .monthly-cat-table tbody td:first-child {
             padding-left: 16px;
-            min-width: 90px;
+            min-width: 120px;
+            text-align: left;
+        }
+        
+        .monthly-cat-table thead th:not(:first-child) {
+            text-align: right;
+        }
+        
+        .monthly-cat-table tbody td:not(:first-child) {
+            text-align: right;
         }
         
         .monthly-cat-table .amount-cell {
             font-size: 0.75rem;
             font-weight: 500;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .monthly-cat-table .amount-cell.highlight {
+            color: #2563eb;
+            font-weight: 600;
+        }
+        
+        .monthly-cat-table .amount-cell.zero {
+            color: #cbd5e1;
+            font-weight: 400;
+        }
+        
+        .monthly-cat-table tbody tr {
+            transition: background 0.15s;
+        }
+        
+        .monthly-cat-table tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        .monthly-cat-table tbody tr.total-row {
+            background: #f8fafc;
+        }
+        
+        .monthly-cat-table tbody tr.total-row td {
+            font-weight: 700;
+            border-top: 2px solid #e2e8f0;
         }
         
         /* 월별 테이블에서는 2번째 열(1월)도 같은 색상으로 */
@@ -1247,9 +1354,9 @@
             color: #dc2626;
         }
         .yoy-percent {
-            font-size: 12px;
-            margin-top: 4px;
-            color: #15803d;
+            font-size: 0.5rem;
+            margin-top: 2px;
+            color: #94a3b8;
         }
         .yoy-percent .up { color: #15803d; }
         .yoy-percent .down { color: #dc2626; }
@@ -1261,11 +1368,11 @@
         .yoy-chart-area {
             flex: 1;
             position: relative;
-            min-height: 100px;
+            min-height: 150px;
         }
         .yoy-chart-area svg {
             width: 100%;
-            height: 100px;
+            height: 150px;
         }
         .yoy-legend {
             position: absolute;
@@ -1409,26 +1516,47 @@
                     <div class="card-value" id="totalConfirmed">0원</div>
                 </div>
                 <div class="card green important">
-                    <div class="card-title">달성률</div>
-                    <div class="card-value" id="achievementRate">0%</div>
-                    <div class="achievement-progress">
-                        <div class="progress-track">
-                            <div class="progress-bar level-red" id="achievementProgressBar" style="width: 0%;"></div>
+                    <div style="display:flex; gap:12px; align-items:stretch;">
+                        <div style="flex:1; text-align:center;">
+                            <div class="card-title" id="monthlyRateTitle">1월 달성률</div>
+                            <div style="position:relative; width:70px; height:40px; margin:4px auto 0; overflow:hidden;">
+                                <svg id="monthlyGaugeSvg" width="70" height="40" viewBox="0 0 70 40">
+                                    <path d="M 5 38 A 30 30 0 0 1 65 38" fill="none" stroke="#e2e8f0" stroke-width="6" stroke-linecap="round"/>
+                                    <path id="monthlyGaugeBar" d="M 5 38 A 30 30 0 0 1 65 38" fill="none" stroke="#3b82f6" stroke-width="6" stroke-linecap="round"
+                                        stroke-dasharray="94.2"
+                                        stroke-dashoffset="94.2"/>
+                                </svg>
+                                <div id="monthlyAchievementRate" style="position:absolute; bottom:0; left:50%; transform:translateX(-50%); font-size:0.9rem; font-weight:700; color:#3b82f6;">0%</div>
+                            </div>
+                            <div id="monthlyTargetLabel" style="font-size:0.55rem; color:#94a3b8; margin-top:2px;">목표 0.0억</div>
                         </div>
-                        <div class="progress-label" id="achievementProgressLabel">달성까지 남은 금액: 230억</div>
+                        <div style="width:1px; background:#e2e8f0;"></div>
+                        <div style="flex:1; text-align:center; display:flex; flex-direction:column; justify-content:center;">
+                            <div class="card-title">연간 달성률</div>
+                            <div class="card-value" id="achievementRate" style="font-size:1.1rem; color:#3b82f6; margin:4px 0;">0%</div>
+                            <div class="achievement-progress" style="margin:4px 0;">
+                                <div class="progress-track">
+                                    <div class="progress-bar" id="yearlyProgressBar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <div id="achievementProgressLabel" style="font-size:0.55rem; color:#94a3b8;">달성까지 230억</div>
+                        </div>
                     </div>
                 </div>
                 <div class="card orange secondary">
                     <div class="card-title">수금예정액</div>
-                    <div class="card-value" id="totalOutstanding">0원</div>
+                    <div class="card-value" id="totalOutstanding" style="color:#f59e0b;">0원</div>
+                    <div style="margin-top:10px; padding-top:10px; border-top:1px solid #e2e8f0;">
+                        <div class="card-title">수금률</div>
+                        <div id="collectionRate" style="font-size:1.1rem; font-weight:700; color:#64748b;">0%</div>
+                    </div>
                 </div>
                 <div class="card red secondary">
-                    <div class="card-title">관리미수금<br><span style="font-size:10px;">(매출 발생후 +30일)</span></div>
+                    <div class="card-title" style="display:flex; align-items:center; gap:5px; justify-content:center;">
+                        <span>관리미수금</span>
+                        <span class="info-tooltip" onmouseenter="showDelayTooltip(event)" onmouseleave="hideDelayTooltip()" style="display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; background:#e2e8f0; border-radius:50%; font-size:0.55rem; color:#64748b; cursor:help;">?</span>
+                    </div>
                     <div class="card-value" id="totalDelayed">0원</div>
-                </div>
-                <div class="card yellow secondary">
-                    <div class="card-title">수금률</div>
-                    <div class="card-value" id="collectionRate">0%</div>
                 </div>
             </div>
             
@@ -1507,43 +1635,66 @@
                         <div class="analysis-title">연말 예상 매출</div>
                         <div class="forecast-highlight">
                             <div class="forecast-subtitle">현재 추세 유지 시</div>
-                            <div class="forecast-amount" id="forecastAmount">0억</div>
-                            <div class="forecast-note" id="forecastNote">목표 대비 0억 부족 예상</div>
+                            <div class="forecast-amount" id="forecastAmount">0.0억</div>
+                            <div class="forecast-note" id="forecastNote">목표 대비 0.0억 부족 예상</div>
                         </div>
                         <div class="required-note">
                             <div class="required-label">목표 달성을 위해</div>
-                            <div class="required-value" id="requiredMonthly">남은 0개월간 매월 0억 필요</div>
+                            <div class="required-value" id="requiredMonthly">남은 0개월간 매월 0.0억 필요</div>
                         </div>
-                        <div style="font-size: 0.65rem; color: #94a3b8; margin-top: 12px; text-align: center;">
-                            ※ 계산식: (현재까지 확정매출 ÷ 경과일수) × 365
+                        <div style="font-size: 0.7rem; color: #64748b; margin-top: 12px; text-align: center; line-height: 1.7;">
+                            ※ 현재 매출을 월 매출로 환산 후 전년 월별 비중으로 연간 매출 예상<br>
+                            <span style="color: #94a3b8;">계산식: (현재매출 ÷ 경과일 × 해당월 일수) ÷ 전년 월별 비중</span>
                         </div>
                     </div>
                     
-                    <!-- 달성률 상세 -->
+                    <!-- 달성률 상세 - 반원 차트 옵션2: 두꺼운 반원 + 그라데이션 -->
                     <div class="analysis-card">
-                        <div class="analysis-title">목표 달성 현황</div>
-                        <div class="achievement-display">
-                            <div class="achievement-percent warning" id="analysisAchievement">0%</div>
+                        <div class="analysis-title" style="margin-bottom: 10px;">목표 달성 현황</div>
+                        
+                        <!-- 월별/연간 탭 -->
+                        <div style="display: flex; gap: 4px; margin-bottom: 12px;">
+                            <button onclick="setGoalTab('monthly')" id="goalTabMonthly" style="flex: 1; padding: 7px 10px; font-size: 0.75rem; border: 1px solid #e2e8f0; background: #3b82f6; color: white; border-radius: 6px; cursor: pointer; font-weight: 500;">월별 목표</button>
+                            <button onclick="setGoalTab('yearly')" id="goalTabYearly" style="flex: 1; padding: 7px 10px; font-size: 0.75rem; border: 1px solid #e2e8f0; background: white; color: #64748b; border-radius: 6px; cursor: pointer; font-weight: 500;">연간 목표</button>
                         </div>
-                        <div class="achievement-bar">
-                            <div class="achievement-track">
-                                <div class="achievement-fill" id="analysisProgressFill" style="width: 0%;"></div>
-                            </div>
-                            <div class="achievement-markers">
-                                <span>0%</span>
-                                <span>50%</span>
-                                <span>70%</span>
-                                <span>100%</span>
+                        
+                        <!-- 월 선택 (월별 모드일 때만) -->
+                        <div id="goalMonthSelector" style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 5px;">
+                            <button onclick="changeGoalMonth(-1)" style="background: #e2e8f0; border: none; border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">◀</button>
+                            <span id="goalMonthLabel" style="font-size: 0.9rem; font-weight: 600; color: #1e293b; min-width: 40px; text-align: center;">1월</span>
+                            <button onclick="changeGoalMonth(1)" style="background: #e2e8f0; border: none; border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">▶</button>
+                        </div>
+                        
+                        <!-- 반원 차트 (중앙) -->
+                        <div style="display: flex; justify-content: center; position: relative;">
+                            <svg id="goalSemiChart" width="220" height="120" viewBox="0 0 220 120">
+                                <defs>
+                                    <linearGradient id="semiGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#3b82f6"/>
+                                        <stop offset="100%" style="stop-color:#06b6d4"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- 배경 반원 -->
+                                <path d="M 20 105 A 90 90 0 0 1 200 105" fill="none" stroke="#e2e8f0" stroke-width="22" stroke-linecap="round"/>
+                                <!-- 진행 반원 -->
+                                <path id="goalSemiFill" d="M 20 105 A 90 90 0 0 1 200 105" fill="none" stroke="url(#semiGrad)" stroke-width="22" stroke-linecap="round"
+                                    stroke-dasharray="0 282.74"/>
+                            </svg>
+                            <div style="position:absolute; bottom:10px; text-align:center;">
+                                <div id="goalDonutPercent" style="font-size:2rem; font-weight:700; color:#3b82f6;">0%</div>
+                                <div id="goalDonutLabel" style="font-size:0.65rem; color:#94a3b8;">월 달성률</div>
                             </div>
                         </div>
-                        <div class="stat-boxes">
-                            <div class="stat-box positive">
-                                <div class="stat-box-label">현재 달성</div>
-                                <div class="stat-box-value" id="analysisAchieved">0억</div>
+                        
+                        <!-- 하단 금액 정보 -->
+                        <div style="display: flex; gap: 8px; margin-top: 5px;">
+                            <div style="flex: 1; background: #f0fdf4; border-radius: 6px; padding: 10px; text-align: center;">
+                                <div style="font-size: 0.65rem; color: #64748b; margin-bottom: 2px;">현재 달성</div>
+                                <div id="goalAchievedValue" style="font-size: 0.95rem; font-weight: 700; color: #16a34a;">0원</div>
                             </div>
-                            <div class="stat-box negative">
-                                <div class="stat-box-label">남은 목표</div>
-                                <div class="stat-box-value" id="analysisRemaining">230억</div>
+                            <div style="flex: 1; background: #fef2f2; border-radius: 6px; padding: 10px; text-align: center;">
+                                <div style="font-size: 0.65rem; color: #64748b; margin-bottom: 2px;" id="goalRemainingLabel">남은 목표</div>
+                                <div id="goalRemainingValue" style="font-size: 0.95rem; font-weight: 700; color: #dc2626;">0원</div>
                             </div>
                         </div>
                     </div>
@@ -1584,7 +1735,7 @@
                         </div>
                         <div style="text-align: center;">
                             <div style="font-size: 0.7rem; color: #94a3b8; margin-bottom: 4px;">현재달성매출</div>
-                            <div style="font-size: 1.25rem; font-weight: 700; color: #3b82f6; font-family: 'Inter', sans-serif;" id="totalAchievedDisplay">0억원</div>
+                            <div style="font-size: 1.25rem; font-weight: 700; color: #3b82f6; font-family: 'Inter', sans-serif;" id="totalAchievedDisplay">0.0억원</div>
                         </div>
                     </div>
                     
@@ -1593,11 +1744,11 @@
                     </div>
                 </div>
                 
-                <!-- TOP 5 현장 & 전월 대비 (위치 변경: 아래로) -->
+                <!-- TOP 7 현장 & 전월 대비 (위치 변경: 아래로) -->
                 <div class="analysis-grid" style="margin-top: 20px; grid-template-columns: 0.75fr 1.75fr;">
-                    <!-- TOP 5 현장 -->
+                    <!-- TOP 7 현장 -->
                     <div class="analysis-card">
-                        <div class="analysis-title" style="margin-bottom: 12px;">TOP 5 수익</div>
+                        <div class="analysis-title" style="margin-bottom: 12px;">TOP 7 수익</div>
                         
                         <!-- 누적/당월 탭 -->
                         <div style="display: flex; gap: 4px; margin-bottom: 10px;">
@@ -1611,7 +1762,7 @@
                             <button onclick="setRankingType('site')" id="rankTypeSite" class="rank-tab" style="flex: 1; padding: 5px 8px; font-size: 0.7rem; border: 1px solid #e2e8f0; background: white; color: #94a3b8; border-radius: 4px; cursor: pointer;">현장별</button>
                         </div>
                         
-                        <div class="ranking-list" id="top5Ranking">
+                        <div class="ranking-list" id="top7Ranking">
                             <div class="ranking-row">
                                 <div class="ranking-num">1</div>
                                 <div class="ranking-name">-</div>
@@ -1637,6 +1788,16 @@
                                 <div class="ranking-name">-</div>
                                 <div class="ranking-amount">0원</div>
                             </div>
+                            <div class="ranking-row">
+                                <div class="ranking-num">6</div>
+                                <div class="ranking-name">-</div>
+                                <div class="ranking-amount">0원</div>
+                            </div>
+                            <div class="ranking-row">
+                                <div class="ranking-num">7</div>
+                                <div class="ranking-name">-</div>
+                                <div class="ranking-amount">0원</div>
+                            </div>
                         </div>
                     </div>
                     
@@ -1644,7 +1805,7 @@
                     <div class="right-column">
                         <!-- 전월 대비 -->
                         <div class="analysis-card" style="padding: 16px;">
-                            <div class="analysis-title" style="margin-bottom: 12px;">전월 대비 (MoM) <span id="momPeriod" style="font-size: 0.7rem; color: #94a3b8; font-weight: 400;"></span></div>
+                            <div class="analysis-title" style="margin-bottom: 12px;">전월 대비 (MOM) <span id="momPeriod" style="font-size: 0.7rem; color: #94a3b8; font-weight: 400;"></span></div>
                             <div class="mom-grid">
                                 <div class="mom-item">
                                     <div class="mom-label">계약매출</div>
@@ -1661,36 +1822,35 @@
                         
                         <!-- 전년 대비 (YOY) - MOM 스타일 배경 음영 -->
                         <div class="analysis-card" style="padding: 16px; margin-top: 12px;">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                                <div class="analysis-title" style="margin:0;">전년 대비 (YoY)</div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                <div class="analysis-title" style="margin:0;">전년 대비 (YOY)</div>
                                 <button class="yoy-edit-btn" onclick="openYoyEditModal()" style="font-size:0.65rem; padding:4px 8px;">2025년 수정</button>
                             </div>
                             
-                            <!-- 월 선택 버튼 - 타이틀 아래에 별도 줄 -->
-                            <div style="display:flex; align-items:center; gap:6px; margin-bottom:10px;">
-                                <button onclick="changeYoyMonth(-1)" style="background:#e2e8f0; border:none; border-radius:4px; padding:4px 10px; cursor:pointer; font-size:0.8rem; font-weight:600;">◀</button>
-                                <span id="yoyMonthLabel" style="font-size:0.9rem; font-weight:600; color:#1e293b; min-width:35px; text-align:center;">1월</span>
-                                <button onclick="changeYoyMonth(1)" style="background:#e2e8f0; border:none; border-radius:4px; padding:4px 10px; cursor:pointer; font-size:0.8rem; font-weight:600;">▶</button>
-                            </div>
-                            
                             <!-- 내용: 왼쪽 금액비교 + 오른쪽 차트 -->
-                            <div style="display:flex; gap:8px;">
-                                <!-- 왼쪽: 금액 비교 (크기 확대) -->
-                                <div style="background:#f8fafc; border-radius:8px; padding:10px 14px; min-width:120px;">
-                                    <!-- 전년동월 | 올해 나란히 -->
-                                    <div style="display:flex; gap:15px; margin-bottom:12px;">
+                            <div style="display:flex; gap:8px; height: 150px;">
+                                <!-- 왼쪽: 월 선택 + 금액 비교 (한 묶음) -->
+                                <div style="background:#f8fafc; border-radius:8px; padding:12px 14px; display:flex; flex-direction:column; justify-content:space-between;">
+                                    <!-- 월 선택 버튼 (작게) -->
+                                    <div style="display:flex; align-items:center; justify-content:center; gap:4px; margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid #e2e8f0;">
+                                        <button onclick="changeYoyMonth(-1)" style="background:#e2e8f0; border:none; border-radius:4px; padding:3px 8px; cursor:pointer; font-size:0.75rem; font-weight:600;">◀</button>
+                                        <span id="yoyMonthLabel" style="font-size:0.9rem; font-weight:600; color:#64748b; min-width:30px; text-align:center;">1월</span>
+                                        <button onclick="changeYoyMonth(1)" style="background:#e2e8f0; border:none; border-radius:4px; padding:3px 8px; cursor:pointer; font-size:0.75rem; font-weight:600;">▶</button>
+                                    </div>
+                                    <!-- 25년 | 26년 나란히 -->
+                                    <div style="display:flex; gap:14px; margin-bottom:8px;">
                                         <div style="text-align:center;">
-                                            <div style="font-size:0.55rem; color:#94a3b8; margin-bottom:2px;">전년동월</div>
+                                            <div style="font-size:0.65rem; color:#94a3b8;">25년</div>
                                             <div id="yoyPrevAmount" style="font-size:1rem; font-weight:700; color:#64748b;">-</div>
                                         </div>
                                         <div style="text-align:center;">
-                                            <div style="font-size:0.55rem; color:#94a3b8; margin-bottom:2px;" id="yoyCurrLabel">올해</div>
+                                            <div style="font-size:0.65rem; color:#94a3b8;" id="yoyCurrLabel">26년</div>
                                             <div id="yoyCurrAmount" style="font-size:1rem; font-weight:700; color:#3b82f6;">-</div>
                                         </div>
                                     </div>
                                     <!-- 증감 표시 (하단) -->
-                                    <div style="text-align:center; border-top:1px solid #e2e8f0; padding-top:8px;">
-                                        <div class="yoy-change" id="yoyChange" style="font-size:0.9rem; font-weight:700;">-</div>
+                                    <div style="text-align:center; border-top:1px solid #e2e8f0; padding-top:6px;">
+                                        <div class="yoy-change" id="yoyChange" style="font-size:0.85rem; font-weight:700;">-</div>
                                         <div class="yoy-percent" id="yoyPercent" style="font-size:0.6rem;"></div>
                                     </div>
                                 </div>
@@ -1702,7 +1862,7 @@
                                         <div class="yoy-legend-item"><div class="yoy-legend-dot prev"></div>2025</div>
                                         <div class="yoy-legend-item"><div class="yoy-legend-dot curr"></div>2026</div>
                                     </div>
-                                    <svg id="yoyChart" viewBox="0 0 550 95" style="width:100%; height:95px;"></svg>
+                                    <svg id="yoyChart" viewBox="0 0 550 150" style="width:100%; height:150px;"></svg>
                                 </div>
                             </div>
                             
@@ -1721,7 +1881,7 @@
                 <div id="yoyChartModal" onclick="if(event.target===this) closeYoyChartModal();" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:2000; justify-content:center; align-items:center;">
                     <div style="background:white; border-radius:12px; padding:20px 25px; box-shadow:0 10px 40px rgba(0,0,0,0.2); max-width:95vw; max-height:90vh; overflow:auto;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                            <div style="font-weight:600; font-size:1.1rem; color:#1e293b;">전년 대비 (YoY) 상세</div>
+                            <div style="font-weight:600; font-size:1.1rem; color:#1e293b;">전년 대비 (YOY) 상세</div>
                             <div style="display:flex; align-items:center; gap:15px;">
                                 <div style="display:flex; gap:12px; font-size:0.75rem;">
                                     <div style="display:flex; align-items:center; gap:4px;"><div style="width:10px; height:10px; background:#94a3b8; border-radius:50%;"></div>2025</div>
@@ -1946,14 +2106,14 @@
                         const day = salesDate.getDate();
                         monthly2026Full[month] += salesAmt;
                         
-                        // N일 기준: 선택한 월이 현재 월이면 오늘까지, 아니면 전체
+                        // N일 기준: 선택한 월이 현재 월이면 어제까지, 아니면 전체
                         if (month === selectedYoyMonth) {
-                            if (month === currentMonth && day <= currentDay) {
+                            if (month === currentMonth && day < currentDay) {
                                 monthly2026ByDay[month] += salesAmt;
                             } else if (month < currentMonth) {
                                 monthly2026ByDay[month] += salesAmt;
                             } else if (month === currentMonth) {
-                                if (day <= currentDay) monthly2026ByDay[month] += salesAmt;
+                                if (day < currentDay) monthly2026ByDay[month] += salesAmt;
                             }
                         } else {
                             monthly2026ByDay[month] += salesAmt;
@@ -1968,15 +2128,15 @@
             if (selectedYoyMonth === currentMonth) {
                 // 현재 월이면 오늘 날짜까지만
                 currAmount = monthly2026ByDay[selectedYoyMonth];
-                dayLabel = `올해(${currentDay}일)`;
+                dayLabel = `26년 (~${currentDay - 1}일)`;
             } else if (selectedYoyMonth < currentMonth) {
                 // 지난 월이면 전체
                 currAmount = monthly2026Full[selectedYoyMonth];
-                dayLabel = '올해';
+                dayLabel = '26년';
             } else {
                 // 미래 월이면 데이터 없음
                 currAmount = monthly2026Full[selectedYoyMonth];
-                dayLabel = '올해';
+                dayLabel = '26년';
             }
             
             // 전년동월 (전체)
@@ -2024,7 +2184,7 @@
                 const pctSign = pct >= 0 ? '▲' : '▼';
                 // 마이너스는 부드러운 회색으로
                 const pctColor = pct >= 0 ? '#10b981' : '#94a3b8';
-                pctEl.innerHTML = `<span style="color:${pctColor}; font-size:0.85rem;">${pctSign} ${Math.abs(pct).toFixed(1)}%</span>`;
+                pctEl.innerHTML = `<span style="color:${pctColor}; font-size:0.55rem;">${pctSign} ${Math.abs(pct).toFixed(1)}%</span>`;
             }
             
             // 차트 그리기 (전체 데이터 기준)
@@ -2037,8 +2197,8 @@
             const svg = document.getElementById('yoyChart');
             if (!svg) return;
             
-            const width = 550, height = 95;
-            const padding = { top: 14, right: 5, bottom: 14, left: 5 };
+            const width = 550, height = 150;
+            const padding = { top: 16, right: 5, bottom: 18, left: 5 };
             const chartW = width - padding.left - padding.right;
             const chartH = height - padding.top - padding.bottom;
             
@@ -2058,9 +2218,9 @@
             
             let html = '';
             
-            // 그리드 라인 (연한 회색)
-            for (let i = 0; i <= 2; i++) {
-                const y = padding.top + (chartH / 2) * i;
+            // 그리드 라인 (연한 회색) - 4개
+            for (let i = 0; i <= 4; i++) {
+                const y = padding.top + (chartH / 4) * i;
                 html += `<line x1="${padding.left}" y1="${y}" x2="${width-padding.right}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/>`;
             }
             
@@ -2263,7 +2423,7 @@
         // 전년도 매출 상세 그리드 업데이트
         function updateYoyDetailGrid() {
             const grid = document.getElementById('yoyDetailGrid');
-            const months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+            const months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월(예상)'];
             
             const formatEok = (v) => {
                 const eok = v / 100000000;
@@ -2279,10 +2439,11 @@
             `).join('');
         }
         
-        // TOP 5 랭킹 상태
+        // TOP 7 랭킹 상태
         let currentRankPeriod = 'cumulative';  // 'cumulative' | 'monthly'
         let currentRankType = 'company';       // 'company' | 'site'
         window.rankingData = { cumulative: { company: {}, site: {} }, monthly: { company: {}, site: {} } };
+        window.rankingDetail = { cumulative: { company: {}, site: {} }, monthly: { company: {}, site: {} } };
         
         // 랭킹 기간 탭 전환 (누적/당월)
         function setRankingPeriod(period) {
@@ -2330,25 +2491,115 @@
             updateRankingDisplay();
         }
         
-        // TOP 5 랭킹 표시 업데이트
+        // TOP 7 랭킹 표시 업데이트
         function updateRankingDisplay() {
             const data = window.rankingData[currentRankPeriod][currentRankType];
+            const detail = window.rankingDetail ? window.rankingDetail[currentRankPeriod][currentRankType] : {};
             
             const sortedData = Object.entries(data)
                 .sort((a, b) => b[1] - a[1])
-                .slice(0, 5);
+                .slice(0, 7);
             
-            const rankingHtml = sortedData.map((item, idx) => `
-                <div class="ranking-row">
+            // 카테고리 한글 이름
+            const catNames = {
+                '컨설팅': '컨설팅',
+                'S_N솔루션': 'S/N솔루션',
+                '특허기술자문료': '특허기술자문료',
+                '자재판매': '자재판매'
+            };
+            
+            const rankingHtml = sortedData.map((item, idx) => {
+                const name = item[0];
+                const amount = item[1];
+                const categoryDetail = detail[name] || {};
+                
+                // 카테고리별 매출 툴팁 텍스트 생성
+                let tooltipText = '';
+                Object.entries(categoryDetail).forEach(([cat, catAmount]) => {
+                    const catName = catNames[cat] || cat;
+                    tooltipText += `${catName}: ${formatBillions(catAmount)}\\n`;
+                });
+                
+                return `
+                <div class="ranking-row" style="position:relative;" 
+                     onmouseenter="showRankingTooltip(event, '${tooltipText.replace(/'/g, "\\'")}')" 
+                     onmouseleave="hideRankingTooltip()">
                     <div class="ranking-num">${idx + 1}</div>
-                    <div class="ranking-name">${item[0]}</div>
-                    <div class="ranking-amount">${formatBillions(item[1])}</div>
+                    <div class="ranking-name">${name}</div>
+                    <div class="ranking-amount">${formatBillions(amount)}</div>
                 </div>
-            `).join('') || '<div style="color:#888;text-align:center;padding:20px;">데이터 없음</div>';
+            `}).join('') || '<div style="color:#888;text-align:center;padding:20px;">데이터 없음</div>';
             
-            const top5RankingEl = document.getElementById('top5Ranking');
-            if (top5RankingEl) {
-                top5RankingEl.innerHTML = rankingHtml;
+            const top7RankingEl = document.getElementById('top7Ranking');
+            if (top7RankingEl) {
+                top7RankingEl.innerHTML = rankingHtml;
+            }
+        }
+        
+        // 랭킹 툴팁 표시
+        function showRankingTooltip(event, text) {
+            if (!text || text.trim() === '') return;
+            
+            let tooltip = document.getElementById('rankingTooltip');
+            if (!tooltip) {
+                tooltip = document.createElement('div');
+                tooltip.id = 'rankingTooltip';
+                tooltip.style.cssText = 'position:fixed; background:#1e293b; color:white; padding:8px 12px; border-radius:6px; font-size:0.75rem; z-index:9999; pointer-events:none; white-space:pre-line; box-shadow:0 4px 12px rgba(0,0,0,0.15);';
+                document.body.appendChild(tooltip);
+            }
+            
+            tooltip.textContent = text.replace(/\\n/g, '\n');
+            tooltip.style.display = 'block';
+            tooltip.style.left = (event.clientX + 10) + 'px';
+            tooltip.style.top = (event.clientY + 10) + 'px';
+        }
+        
+        // 랭킹 툴팁 숨기기
+        function hideRankingTooltip() {
+            const tooltip = document.getElementById('rankingTooltip');
+            if (tooltip) {
+                tooltip.style.display = 'none';
+            }
+        }
+        
+        // 입금지연 기준 툴팁 표시
+        function showDelayTooltip(event) {
+            let tooltip = document.getElementById('delayTooltip');
+            if (!tooltip) {
+                tooltip = document.createElement('div');
+                tooltip.id = 'delayTooltip';
+                tooltip.style.cssText = 'position:fixed; background:#f8fafc; color:#334155; padding:14px 18px; border-radius:10px; font-size:0.75rem; z-index:9999; pointer-events:none; box-shadow:0 4px 20px rgba(0,0,0,0.12); border:1px solid #e2e8f0; line-height:1.6;';
+                document.body.appendChild(tooltip);
+            }
+            
+            tooltip.innerHTML = `
+                <div style="font-weight:700; color:#1e293b; margin-bottom:6px;">📋 지연 기준</div>
+                <div style="font-size:0.65rem; color:#94a3b8; margin-bottom:8px;">매출일 기준</div>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <div style="display:flex; justify-content:space-between; gap:20px;">
+                        <span style="color:#64748b;">자재판매</span>
+                        <span style="font-weight:600; color:#1e293b;">40일 경과시</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; gap:20px;">
+                        <span style="color:#64748b;">선금</span>
+                        <span style="font-weight:600; color:#1e293b;">20일 경과시</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; gap:20px;">
+                        <span style="color:#64748b;">그 외</span>
+                        <span style="font-weight:600; color:#1e293b;">30일 경과시</span>
+                    </div>
+                </div>
+            `;
+            tooltip.style.display = 'block';
+            tooltip.style.left = (event.clientX + 10) + 'px';
+            tooltip.style.top = (event.clientY - 120) + 'px';
+        }
+        
+        // 입금지연 툴팁 숨기기
+        function hideDelayTooltip() {
+            const tooltip = document.getElementById('delayTooltip');
+            if (tooltip) {
+                tooltip.style.display = 'none';
             }
         }
         
@@ -2384,6 +2635,126 @@
         // 목표 수정 모달 닫기
         function closeTargetEditModal() {
             document.getElementById('targetEditModal').style.display = 'none';
+        }
+        
+        // 목표 달성 현황 상태
+        let currentGoalTab = 'monthly';  // 'monthly' | 'yearly'
+        let currentGoalMonth = 0;  // 0~11 (1월~12월)
+        let monthlyAchievedData = Array(12).fill(0);  // 월별 달성 금액
+        let totalYearlyAchieved = 0;  // 연간 총 달성액
+        
+        // 탭 전환
+        function setGoalTab(tab) {
+            currentGoalTab = tab;
+            
+            const monthlyBtn = document.getElementById('goalTabMonthly');
+            const yearlyBtn = document.getElementById('goalTabYearly');
+            const monthSelector = document.getElementById('goalMonthSelector');
+            
+            if (tab === 'monthly') {
+                monthlyBtn.style.background = '#3b82f6';
+                monthlyBtn.style.color = 'white';
+                yearlyBtn.style.background = 'white';
+                yearlyBtn.style.color = '#64748b';
+                monthSelector.style.display = 'flex';
+                updateMonthlyDonut();
+            } else {
+                yearlyBtn.style.background = '#3b82f6';
+                yearlyBtn.style.color = 'white';
+                monthlyBtn.style.background = 'white';
+                monthlyBtn.style.color = '#64748b';
+                monthSelector.style.display = 'none';
+                updateYearlyDonut();
+            }
+        }
+        
+        // 월 변경
+        function changeGoalMonth(delta) {
+            currentGoalMonth += delta;
+            if (currentGoalMonth < 0) currentGoalMonth = 11;
+            if (currentGoalMonth > 11) currentGoalMonth = 0;
+            updateMonthlyDonut();
+        }
+        
+        // 반원 차트 업데이트 (공통)
+        function updateDonutChart(percent, color) {
+            const circumference = 282.74;  // 반원 둘레 (π * r = π * 90)
+            const dashArray = (percent / 100) * circumference;
+            const semiFill = document.getElementById('goalSemiFill');
+            if (semiFill) {
+                semiFill.setAttribute('stroke-dasharray', `${dashArray} ${circumference}`);
+                // 그라데이션 색상 변경
+                const grad = document.getElementById('semiGrad');
+                if (grad) {
+                    const stops = grad.getElementsByTagName('stop');
+                    if (percent >= 70) {
+                        stops[0].style.stopColor = '#22c55e';
+                        stops[1].style.stopColor = '#16a34a';
+                    } else if (percent >= 50) {
+                        stops[0].style.stopColor = '#f59e0b';
+                        stops[1].style.stopColor = '#eab308';
+                    } else {
+                        stops[0].style.stopColor = '#3b82f6';
+                        stops[1].style.stopColor = '#06b6d4';
+                    }
+                }
+            }
+            const percentEl = document.getElementById('goalDonutPercent');
+            if (percentEl) {
+                percentEl.textContent = percent.toFixed(1) + '%';
+                if (percent >= 70) percentEl.style.color = '#22c55e';
+                else if (percent >= 50) percentEl.style.color = '#f59e0b';
+                else percentEl.style.color = '#3b82f6';
+            }
+        }
+        
+        // 월별 도넛 업데이트
+        function updateMonthlyDonut() {
+            const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+            document.getElementById('goalMonthLabel').textContent = monthNames[currentGoalMonth];
+            document.getElementById('goalDonutLabel').textContent = '월 달성률';
+            document.getElementById('goalRemainingLabel').textContent = '남은 목표';
+            
+            const target = MONTHLY_TARGETS[currentGoalMonth] || 0;
+            const achieved = monthlyAchievedData[currentGoalMonth] || 0;
+            const remaining = Math.max(0, target - achieved);
+            const percent = target > 0 ? Math.min(100, (achieved / target * 100)) : 0;
+            
+            let color = '#ef4444';
+            if (percent >= 70) color = '#22c55e';
+            else if (percent >= 50) color = '#f59e0b';
+            else color = '#3b82f6';
+            
+            updateDonutChart(percent, color);
+            document.getElementById('goalAchievedValue').textContent = formatBillions(achieved);
+            document.getElementById('goalRemainingValue').textContent = formatBillions(remaining);
+        }
+        
+        // 연간 도넛 업데이트
+        function updateYearlyDonut() {
+            document.getElementById('goalDonutLabel').textContent = '연간 달성률';
+            document.getElementById('goalRemainingLabel').textContent = '연간 남은';
+            
+            const yearlyTarget = 23000000000;  // 230억
+            const remaining = Math.max(0, yearlyTarget - totalYearlyAchieved);
+            const percent = Math.min(100, (totalYearlyAchieved / yearlyTarget * 100));
+            
+            let color = '#ef4444';
+            if (percent >= 70) color = '#22c55e';
+            else if (percent >= 50) color = '#f59e0b';
+            
+            updateDonutChart(percent, color);
+            document.getElementById('goalAchievedValue').textContent = formatBillions(totalYearlyAchieved);
+            document.getElementById('goalRemainingValue').textContent = formatBillions(remaining);
+        }
+        
+        // 목표 뷰 업데이트 (데이터 로드 후 호출)
+        function updateGoalView() {
+            if (currentGoalTab === 'monthly') {
+                updateMonthlyDonut();
+            } else {
+                updateYearlyDonut();
+            }
         }
         
         // 목표 저장
@@ -2612,6 +2983,73 @@
                     
                     console.log('=== 시트 목록 ===', workbook.SheetNames);
                     
+                    // 대시보드 시트 읽기 (2D 배열로)
+                    if (workbook.SheetNames.includes('대시보드')) {
+                        const dashSheet = workbook.Sheets['대시보드'];
+                        const dashArray = XLSX.utils.sheet_to_json(dashSheet, { 
+                            header: 1,  // 2D 배열로 읽기
+                            defval: '', 
+                            raw: true
+                        });
+                        allData['대시보드_raw'] = dashArray;
+                        console.log('=== 대시보드 시트 (2D 배열) ===');
+                        console.log('행 수:', dashArray.length);
+                        
+                        // M7 셀에서 관리미수금 가져오기 (M열=12, 7행=인덱스6)
+                        if (dashArray.length > 6 && dashArray[6].length > 12) {
+                            allData['대시보드_관리미수금'] = parseNumber(dashArray[6][12]);
+                            console.log('관리미수금 (M7):', allData['대시보드_관리미수금']);
+                        }
+                        
+                        // 카테고리별 매출 테이블 헤더 찾기 (매출구분, 수금예정액이 같은 행에 있음)
+                        let headerRowIdx = -1;
+                        let outstandingColIdx = -1;
+                        let catColIdx = -1;
+                        
+                        for (let i = 0; i < dashArray.length; i++) {
+                            const row = dashArray[i];
+                            let foundCat = -1, foundOutstanding = -1;
+                            
+                            for (let j = 0; j < row.length; j++) {
+                                const cellVal = String(row[j] || '');
+                                if (cellVal === '매출구분') {
+                                    foundCat = j;
+                                }
+                                if (cellVal === '수금예정액') {
+                                    foundOutstanding = j;
+                                }
+                            }
+                            
+                            // 매출구분과 수금예정액이 같은 행에 있으면 헤더 행
+                            if (foundCat >= 0 && foundOutstanding >= 0) {
+                                headerRowIdx = i;
+                                catColIdx = foundCat;
+                                outstandingColIdx = foundOutstanding;
+                                console.log(`헤더 행 발견: 행${i}, 매출구분 열${foundCat}, 수금예정액 열${foundOutstanding}`);
+                                break;
+                            }
+                        }
+                        
+                        // 카테고리별 수금예정액 추출
+                        allData['대시보드_수금예정액'] = {};
+                        if (headerRowIdx >= 0 && outstandingColIdx >= 0 && catColIdx >= 0) {
+                            for (let i = headerRowIdx + 1; i < Math.min(headerRowIdx + 15, dashArray.length); i++) {
+                                const row = dashArray[i];
+                                const catName = String(row[catColIdx] || '').trim();
+                                const outstanding = parseNumber(row[outstandingColIdx]);
+                                console.log(`행${i}: 카테고리="${catName}", 수금예정액=${outstanding}`);
+                                if (catName && catName !== '' && catName !== '합계') {
+                                    allData['대시보드_수금예정액'][catName] = outstanding;
+                                }
+                                // 합계 행이면 중단
+                                if (catName === '합계') break;
+                            }
+                            console.log('수금예정액 데이터:', allData['대시보드_수금예정액']);
+                        } else {
+                            console.log('헤더를 찾지 못함:', headerRowIdx, catColIdx, outstandingColIdx);
+                        }
+                    }
+                    
                     Object.keys(categoryConfig).forEach(name => {
                         if (workbook.SheetNames.includes(name)) {
                             const sheet = workbook.Sheets[name];
@@ -2745,10 +3183,39 @@
                 '자재판매': 'material'
             };
             
-            // 원 단위로 포맷팅 (콤마 추가, 소수점 제거)
+            // 원 단위로 포맷팅 (0이면 "-" 반환)
             function formatWon(value) {
-                if (value === 0) return '0원';
-                return Math.round(value).toLocaleString() + '원';
+                if (value === 0) return '-';
+                return Math.round(value).toLocaleString();
+            }
+            
+            // 대시보드 시트에서 수금예정액 가져오기
+            function getOutstandingFromDashboard(categoryName) {
+                const outstandingData = allData['대시보드_수금예정액'] || {};
+                // 카테고리명 매핑
+                const nameMap = {
+                    '컨설팅': '컨설팅',
+                    'S_N솔루션': 'S/N솔루션',
+                    '특허기술자문료': '특허기술자문료',
+                    '자재판매': '자재판매'
+                };
+                const searchName = nameMap[categoryName] || categoryName;
+                
+                // 정확한 매칭 먼저
+                if (outstandingData[searchName]) {
+                    console.log(`수금예정액 찾음: ${searchName} = ${outstandingData[searchName]}`);
+                    return outstandingData[searchName];
+                }
+                
+                // 부분 매칭
+                for (const key of Object.keys(outstandingData)) {
+                    if (key.includes(searchName) || searchName.includes(key)) {
+                        console.log(`수금예정액 부분매칭: ${key} = ${outstandingData[key]}`);
+                        return outstandingData[key];
+                    }
+                }
+                
+                return 0;
             }
             
             Object.keys(categoryConfig).forEach(sheetName => {
@@ -2774,13 +3241,17 @@
                         if (seq > maxSeq) maxSeq = seq;
                         
                         collected += parseNumber(findColumn(row, config.collectedCol)) / 1.1;
-                        outstanding += parseNumber(findColumn(row, config.outstandingCol)) / 1.1;
-                        
-                        if (String(findColumn(row, config.delayCol) || '').includes('확인요망')) {
-                            delayed += parseNumber(findColumn(row, config.outstandingCol)) / 1.1;
-                        }
+                    }
+                    
+                    // 관리미수금 (입금지연 확인요망)
+                    const outstandingAmt = parseNumber(findColumn(row, config.outstandingCol));
+                    if (outstandingAmt > 0 && String(findColumn(row, config.delayCol) || '').includes('확인요망')) {
+                        delayed += outstandingAmt / 1.1;
                     }
                 });
+                
+                // 수금예정액은 대시보드 시트에서 직접 가져오기
+                outstanding = getOutstandingFromDashboard(sheetName);
                 
                 const count = sheetName === '자재판매' ? data.filter(row => {
                     const salesDate = findColumn(row, config.salesDateCol);
@@ -2788,14 +3259,15 @@
                     return salesDate && salesDate !== '' && salesAmt > 0;
                 }).length : maxSeq;
                 
-                const countLabel = count;
+                const countLabel = count || '-';
                 const delayedClass = delayed > 0 ? 'warning' : 'zero';
                 const outstandingClass = outstanding > 0 ? '' : 'zero';
+                const dotClass = categoryColors[sheetName] || '';
                 
                 html += `<tr onclick="scrollToDetail('${sheetName}')">
-                    <td>${categoryNames[sheetName]}</td>
+                    <td><span class="category-name"><span class="category-dot dot-${dotClass}"></span>${categoryNames[sheetName]}</span></td>
                     <td style="text-align:center;">${countLabel}</td>
-                    <td class="amount-cell ${expected > 0 ? '' : 'zero'}">${formatWon(expected)}</td>
+                    <td class="amount-cell ${expected > 0 ? 'highlight' : 'zero'}">${formatWon(expected)}</td>
                     <td class="amount-cell ${confirmed > 0 ? '' : 'zero'}">${formatWon(confirmed)}</td>
                     <td class="amount-cell ${outstandingClass}">${formatWon(outstanding)}</td>
                     <td class="amount-cell ${delayedClass}">${formatWon(delayed)}</td>
@@ -2810,23 +3282,27 @@
             });
             
             // 추가 카테고리 (포어스토어, 그로홈, 모여라딜)
-            const extraCategories = ['포어스토어', '그로홈', '모여라딜'];
-            extraCategories.forEach(name => {
-                html += `<tr onclick="scrollToDetail('${name}')">
-                    <td>${name}</td>
+            const extraCategories = [
+                { name: '포어스토어', dot: 'forestore' },
+                { name: '그로홈', dot: 'grohome' },
+                { name: '모여라딜', dot: 'moyeradeal' }
+            ];
+            extraCategories.forEach(cat => {
+                html += `<tr onclick="scrollToDetail('${cat.name}')">
+                    <td><span class="category-name"><span class="category-dot dot-${cat.dot}"></span>${cat.name}</span></td>
                     <td style="text-align:center;">-</td>
-                    <td class="amount-cell zero">0원</td>
-                    <td class="amount-cell zero">0원</td>
-                    <td class="amount-cell zero">0원</td>
-                    <td class="amount-cell zero">0원</td>
+                    <td class="amount-cell zero">-</td>
+                    <td class="amount-cell zero">-</td>
+                    <td class="amount-cell zero">-</td>
+                    <td class="amount-cell zero">-</td>
                 </tr>`;
             });
             
             // 합계 행
             html += `<tr class="total-row">
-                <td style="padding-left: 20px;">합계</td>
-                <td></td>
-                <td class="amount-cell">${formatWon(totals.expected)}</td>
+                <td>합계</td>
+                <td style="text-align:center;">${totals.count || '-'}</td>
+                <td class="amount-cell highlight">${formatWon(totals.expected)}</td>
                 <td class="amount-cell">${formatWon(totals.confirmed)}</td>
                 <td class="amount-cell">${formatWon(totals.outstanding)}</td>
                 <td class="amount-cell ${totals.delayed > 0 ? 'warning' : ''}">${formatWon(totals.delayed)}</td>
@@ -2845,6 +3321,13 @@
             let monthlyTotals = new Array(12).fill(0);
             let grandTotal = 0;
             
+            const categoryDots = {
+                '컨설팅': 'consulting',
+                'S_N솔루션': 'solution',
+                '특허기술자문료': 'patent',
+                '자재판매': 'material'
+            };
+            
             // 포맷 함수
             function formatMonthly(value) {
                 if (value === 0) return '-';
@@ -2859,6 +3342,7 @@
                 const config = categoryConfig[sheetName];
                 let monthlyData = new Array(12).fill(0);
                 let rowTotal = 0;
+                const dotClass = categoryDots[sheetName] || '';
                 
                 data.forEach(row => {
                     const salesDate = findColumn(row, config.salesDateCol);
@@ -2887,16 +3371,21 @@
                 });
                 
                 html += `<tr>
-                    <td>${categoryNames[sheetName]}</td>
-                    ${monthlyData.map(v => `<td class="amount-cell ${v === 0 ? 'zero' : ''}">${formatMonthly(v)}</td>`).join('')}
-                    <td class="amount-cell" style="font-weight:700;">${formatMonthly(rowTotal)}</td>
+                    <td><span class="category-name"><span class="category-dot dot-${dotClass}"></span>${categoryNames[sheetName]}</span></td>
+                    ${monthlyData.map(v => `<td class="amount-cell ${v === 0 ? 'zero' : 'highlight'}">${formatMonthly(v)}</td>`).join('')}
+                    <td class="amount-cell ${rowTotal > 0 ? 'highlight' : 'zero'}" style="font-weight:700;">${formatMonthly(rowTotal)}</td>
                 </tr>`;
             });
             
             // 추가 카테고리 (데이터 없음)
-            ['포어스토어', '그로홈', '모여라딜'].forEach(name => {
+            const extraCats = [
+                { name: '포어스토어', dot: 'forestore' },
+                { name: '그로홈', dot: 'grohome' },
+                { name: '모여라딜', dot: 'moyeradeal' }
+            ];
+            extraCats.forEach(cat => {
                 html += `<tr>
-                    <td>${name}</td>
+                    <td><span class="category-name"><span class="category-dot dot-${cat.dot}"></span>${cat.name}</span></td>
                     ${months.map(() => `<td class="amount-cell zero">-</td>`).join('')}
                     <td class="amount-cell zero">-</td>
                 </tr>`;
@@ -2905,8 +3394,8 @@
             // 합계 행
             html += `<tr class="total-row">
                 <td>합계</td>
-                ${monthlyTotals.map(v => `<td class="amount-cell">${formatMonthly(v)}</td>`).join('')}
-                <td class="amount-cell" style="font-weight:700;">${formatMonthly(grandTotal)}</td>
+                ${monthlyTotals.map(v => `<td class="amount-cell ${v > 0 ? 'highlight' : ''}">${formatMonthly(v)}</td>`).join('')}
+                <td class="amount-cell highlight" style="font-weight:700;">${formatMonthly(grandTotal)}</td>
             </tr>`;
             
             const tbody = document.getElementById('monthlyCatTableBody');
@@ -2982,8 +3471,13 @@
             const monthlySales = Array(12).fill(0);
             const monthlyExpected = Array(12).fill(0);
             
-            // TOP 5 데이터 (누적/당월 × 업체/현장)
+            // TOP 7 데이터 (누적/당월 × 업체/현장) - 카테고리별 상세 포함
             const rankingData = {
+                cumulative: { company: {}, site: {} },
+                monthly: { company: {}, site: {} }
+            };
+            // 카테고리별 상세 데이터
+            const rankingDetail = {
                 cumulative: { company: {}, site: {} },
                 monthly: { company: {}, site: {} }
             };
@@ -3020,22 +3514,38 @@
                             // 누적 데이터 집계
                             if (!rankingData.cumulative.company[companyName]) rankingData.cumulative.company[companyName] = 0;
                             rankingData.cumulative.company[companyName] += salesAmount;
+                            // 카테고리별 상세
+                            if (!rankingDetail.cumulative.company[companyName]) rankingDetail.cumulative.company[companyName] = {};
+                            if (!rankingDetail.cumulative.company[companyName][sheetName]) rankingDetail.cumulative.company[companyName][sheetName] = 0;
+                            rankingDetail.cumulative.company[companyName][sheetName] += salesAmount;
                             
                             if (!rankingData.cumulative.site[siteName]) rankingData.cumulative.site[siteName] = 0;
                             rankingData.cumulative.site[siteName] += salesAmount;
+                            // 카테고리별 상세
+                            if (!rankingDetail.cumulative.site[siteName]) rankingDetail.cumulative.site[siteName] = {};
+                            if (!rankingDetail.cumulative.site[siteName][sheetName]) rankingDetail.cumulative.site[siteName][sheetName] = 0;
+                            rankingDetail.cumulative.site[siteName][sheetName] += salesAmount;
                             
                             // 당월 데이터 집계
                             if (date.getMonth() === thisMonth) {
                                 if (!rankingData.monthly.company[companyName]) rankingData.monthly.company[companyName] = 0;
                                 rankingData.monthly.company[companyName] += salesAmount;
+                                // 카테고리별 상세
+                                if (!rankingDetail.monthly.company[companyName]) rankingDetail.monthly.company[companyName] = {};
+                                if (!rankingDetail.monthly.company[companyName][sheetName]) rankingDetail.monthly.company[companyName][sheetName] = 0;
+                                rankingDetail.monthly.company[companyName][sheetName] += salesAmount;
                                 
                                 if (!rankingData.monthly.site[siteName]) rankingData.monthly.site[siteName] = 0;
                                 rankingData.monthly.site[siteName] += salesAmount;
+                                // 카테고리별 상세
+                                if (!rankingDetail.monthly.site[siteName]) rankingDetail.monthly.site[siteName] = {};
+                                if (!rankingDetail.monthly.site[siteName][sheetName]) rankingDetail.monthly.site[siteName][sheetName] = 0;
+                                rankingDetail.monthly.site[siteName][sheetName] += salesAmount;
                             }
                             
-                            // 동일 기간 비교용 (1~오늘일)
+                            // 동일 기간 비교용 (1~어제일)
                             const dayOfMonth = date.getDate();
-                            if (dayOfMonth <= todayDay) {
+                            if (dayOfMonth < todayDay) {
                                 if (date.getMonth() === thisMonth) {
                                     thisMonthSamePeriod.confirmed += salesAmount;
                                 } else if (date.getMonth() === prevMonthIdx) {
@@ -3055,9 +3565,9 @@
                             totalExpected += contractAmount;
                             monthlyExpected[date.getMonth()] += contractAmount;
                             
-                            // 동일 기간 비교용 (1~오늘일)
+                            // 동일 기간 비교용 (1~어제일)
                             const dayOfMonth = date.getDate();
-                            if (dayOfMonth <= todayDay) {
+                            if (dayOfMonth < todayDay) {
                                 if (date.getMonth() === thisMonth) {
                                     thisMonthSamePeriod.expected += contractAmount;
                                 } else if (date.getMonth() === prevMonthIdx) {
@@ -3080,11 +3590,22 @@
             const currentMonth = Math.max(lastMonthWithData, 1);
             const remainingMonths = 12 - currentMonth;
             
-            // 연말 예상 매출 (일 단위 계산)
-            const startOfYear = new Date(2026, 0, 1);
-            const elapsedDays = Math.max(1, Math.floor((today - startOfYear) / (1000 * 60 * 60 * 24)) + 1);
-            const dailyAvg = totalConfirmed / elapsedDays;
-            const forecastAmount = dailyAvg * 365;
+            // 연말 예상 매출 (전년 실적 기반)
+            const currentMonthIndex = today.getMonth(); // 0 = 1월
+            const currentDay = today.getDate() - 1; // 오늘이 8일이면 7일까지 데이터
+            const daysInCurrentMonth = new Date(today.getFullYear(), currentMonthIndex + 1, 0).getDate();
+            
+            // 전년 실적 합계
+            const lastYearTotal = yoy2025Data.reduce((a, b) => a + b, 0);
+            
+            // 월 매출 환산 = 현재매출 ÷ 경과일 × 해당월 일수
+            const monthlyForecast = currentDay > 0 ? (totalConfirmed / currentDay) * daysInCurrentMonth : 0;
+            
+            // 전년 해당월 비중
+            const currentMonthRatio = yoy2025Data[currentMonthIndex] / lastYearTotal;
+            
+            // 연말 예상 = 월 매출 환산 ÷ 전년 월별 비중
+            const forecastAmount = currentMonthRatio > 0 ? monthlyForecast / currentMonthRatio : 0;
             const gap = TARGET - forecastAmount;
             
             // 목표 달성을 위한 월별 필요 매출
@@ -3111,35 +3632,21 @@
                 document.getElementById('requiredMonthly').textContent = '올해 종료';
             }
             
-            // UI 업데이트 - 달성률
-            document.getElementById('analysisAchievement').textContent = achievementRate + '%';
-            document.getElementById('analysisProgressFill').style.width = Math.min(achievementRate, 100) + '%';
-            document.getElementById('analysisAchieved').textContent = formatBillions(totalConfirmed);
-            document.getElementById('analysisRemaining').textContent = formatBillions(remaining);
+            // UI 업데이트 - 목표 달성 현황 (도넛 차트 + 탭)
+            monthlyAchievedData = monthlySales;  // 월별 달성 데이터 저장
+            totalYearlyAchieved = totalConfirmed;  // 연간 총 달성액 저장
+            updateGoalView();
             
-            // 달성률에 따른 색상
-            const achievementEl = document.getElementById('analysisAchievement');
-            const progressEl = document.getElementById('analysisProgressFill');
-            if (achievementRate < 50) {
-                achievementEl.classList.add('warning');
-                progressEl.style.background = '#ef4444';
-            } else if (achievementRate < 70) {
-                achievementEl.classList.remove('warning');
-                progressEl.style.background = '#f59e0b';
-            } else {
-                achievementEl.classList.remove('warning');
-                progressEl.style.background = '#22c55e';
-            }
-            
-            // TOP 5 데이터 전역 저장 및 렌더링
+            // TOP 7 데이터 전역 저장 및 렌더링
             window.rankingData = rankingData;
+            window.rankingDetail = rankingDetail;
             updateRankingDisplay();
             
-            // 전월 대비 - 동일 기간 비교 (1~오늘일 기준)
+            // 전월 대비 - 동일 기간 비교 (1~어제일 기준)
             const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
             const periodLabel = document.getElementById('momPeriod');
             if (periodLabel) {
-                periodLabel.textContent = `(1~${todayDay}일 기준)`;
+                periodLabel.textContent = `(1~${todayDay - 1}일 기준)`;
             }
             
             const prevConfirmed = prevMonthSamePeriod.confirmed;
@@ -3267,6 +3774,12 @@
                         x: {
                             grid: {
                                 display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12,
+                                    weight: 500
+                                }
                             }
                         },
                         y: {
@@ -3275,6 +3788,9 @@
                                 color: '#f1f5f9'
                             },
                             ticks: {
+                                font: {
+                                    size: 12
+                                },
                                 callback: function(value) {
                                     return value + '억';
                                 }
@@ -3288,9 +3804,11 @@
         // 억원 단위 포맷
         function formatBillions(value) {
             if (value >= 100000000) {
-                return Math.round(value / 100000000) + '억';
+                return (value / 100000000).toFixed(1) + '억';
             } else if (value >= 10000) {
                 return (value / 10000).toFixed(0) + '만원';
+            } else if (value === 0) {
+                return '0.0억';
             } else {
                 return Math.round(value).toLocaleString() + '원';
             }
@@ -3299,11 +3817,11 @@
         // 간단한 포맷 (전월비용)
         function formatSimple(value) {
             if (value >= 100000000) {
-                return Math.round(value / 100000000) + '억';
+                return (value / 100000000).toFixed(1) + '억';
             } else if (value >= 10000) {
                 return Math.round(value / 10000).toLocaleString() + '만';
             } else if (value === 0) {
-                return '0';
+                return '0.0억';
             } else {
                 return Math.round(value).toLocaleString();
             }
@@ -3314,12 +3832,16 @@
             currentPage = 1;
             sortColumn = null;
             
-            // 매출분석 탭 비활성화 처리
+            // 탭 활성화 처리
             document.querySelectorAll('.cat-tab').forEach(tab => {
                 if (tab.textContent.includes('매출분석')) {
                     tab.classList.remove('active');
+                } else if (name === '전체' && tab.textContent === '매출현황') {
+                    tab.classList.add('active');
+                } else if (name !== '전체' && tab.textContent === name) {
+                    tab.classList.add('active');
                 } else {
-                    tab.classList.toggle('active', tab.textContent === name);
+                    tab.classList.remove('active');
                 }
             });
             
@@ -3465,27 +3987,90 @@
             document.getElementById('totalExpected').textContent = formatCurrency(totalExpected);
             document.getElementById('totalConfirmed').textContent = formatCurrency(totalConfirmed);
             document.getElementById('totalOutstanding').textContent = formatCurrency(totalOutstanding);
-            document.getElementById('totalDelayed').textContent = formatCurrency(totalDelayed);
+            
+            // 관리미수금은 대시보드 M7에서 가져오기
+            const dashboardDelayed = allData['대시보드_관리미수금'] || 0;
+            document.getElementById('totalDelayed').textContent = formatCurrency(dashboardDelayed);
             
             const achieveRate = TARGET > 0 ? (totalConfirmed / TARGET * 100) : 0;
             document.getElementById('achievementRate').textContent = achieveRate.toFixed(1) + '%';
             
-            // 프로그레스 바 업데이트
-            const progressBar = document.getElementById('achievementProgressBar');
-            const progressLabel = document.getElementById('achievementProgressLabel');
-            if (progressBar && progressLabel) {
-                progressBar.style.width = Math.min(achieveRate, 100) + '%';
-                progressBar.className = 'progress-bar';
+            // 연간 달성률 프로그레스 바 업데이트
+            const yearlyProgressBar = document.getElementById('yearlyProgressBar');
+            if (yearlyProgressBar) {
+                yearlyProgressBar.style.width = Math.min(achieveRate, 100) + '%';
+                // 색상 설정
+                yearlyProgressBar.className = 'progress-bar';
                 if (achieveRate < 50) {
-                    progressBar.classList.add('level-red');
+                    yearlyProgressBar.classList.add('level-red');
                 } else if (achieveRate < 70) {
-                    progressBar.classList.add('level-yellow');
+                    yearlyProgressBar.classList.add('level-yellow');
                 } else {
-                    progressBar.classList.add('level-green');
+                    yearlyProgressBar.classList.add('level-green');
                 }
-                // 달성까지 남은 금액 표시
-                const additionalNeeded = TARGET - totalConfirmed;
-                progressLabel.textContent = `달성까지 남은 금액: ${formatBillions(additionalNeeded)}`;
+            }
+            
+            // 달성까지 남은 금액 표시
+            const progressLabel = document.getElementById('achievementProgressLabel');
+            if (progressLabel) {
+                const remaining = TARGET - totalConfirmed;
+                progressLabel.textContent = '달성까지 ' + formatBillions(remaining);
+            }
+            
+            // 월별 달성률 계산 (현재 월 기준) - 전체 탭에서만 표시
+            const currentMonth = new Date().getMonth(); // 0-11
+            const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+            
+            document.getElementById('monthlyRateTitle').textContent = monthNames[currentMonth] + ' 달성률';
+            
+            // 월별 목표 금액 표시
+            const currentMonthTarget = MONTHLY_TARGETS[currentMonth] || 0;
+            const monthlyTargetLabel = document.getElementById('monthlyTargetLabel');
+            if (monthlyTargetLabel) {
+                const targetEok = (currentMonthTarget / 100000000).toFixed(1);
+                monthlyTargetLabel.textContent = '목표 ' + targetEok + '억';
+            }
+            
+            if (category === '전체') {
+                const currentMonthConfirmed = monthlyConfirmedData[currentMonth] || 0;
+                const monthlyAchieveRate = currentMonthTarget > 0 ? (currentMonthConfirmed / currentMonthTarget * 100) : 0;
+                
+                document.getElementById('monthlyAchievementRate').textContent = monthlyAchieveRate.toFixed(1) + '%';
+                
+                // 반달 게이지 업데이트 (stroke-dashoffset 계산)
+                const gaugeBar = document.getElementById('monthlyGaugeBar');
+                if (gaugeBar) {
+                    const maxOffset = 94.2; // stroke-dasharray 값
+                    const offset = maxOffset - (Math.min(monthlyAchieveRate, 100) / 100 * maxOffset);
+                    gaugeBar.setAttribute('stroke-dashoffset', offset);
+                    
+                    // 색상 설정
+                    let gaugeColor = '#3b82f6'; // 기본 파랑
+                    if (monthlyAchieveRate >= 100) {
+                        gaugeColor = '#22c55e'; // 초록
+                    } else if (monthlyAchieveRate >= 70) {
+                        gaugeColor = '#3b82f6'; // 파랑
+                    } else if (monthlyAchieveRate >= 50) {
+                        gaugeColor = '#f59e0b'; // 주황
+                    }
+                    gaugeBar.setAttribute('stroke', gaugeColor);
+                    document.getElementById('monthlyAchievementRate').style.color = gaugeColor;
+                }
+            } else {
+                // 카테고리별은 목표가 없으므로 '-' 표시
+                document.getElementById('monthlyAchievementRate').textContent = '-';
+                document.getElementById('monthlyAchievementRate').style.color = '#94a3b8';
+                
+                // 게이지 초기화
+                const gaugeBar = document.getElementById('monthlyGaugeBar');
+                if (gaugeBar) {
+                    gaugeBar.setAttribute('stroke-dashoffset', '94.2');
+                    gaugeBar.setAttribute('stroke', '#94a3b8');
+                }
+                
+                if (monthlyTargetLabel) {
+                    monthlyTargetLabel.textContent = '-';
+                }
             }
             
             const collRate = totalConfirmed > 0 ? (totalCollected / totalConfirmed * 100) : 0;
@@ -3666,9 +4251,20 @@
                         }
                     },
                     scales: { 
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 12,
+                                    weight: 500
+                                }
+                            }
+                        },
                         y: { 
                             beginAtZero: true,
                             ticks: { 
+                                font: {
+                                    size: 12
+                                },
                                 stepSize: 1500000000, // 15억 단위
                                 callback: function(v) {
                                     return (v / 100000000).toFixed(0) + '억';
@@ -3725,7 +4321,7 @@
                     }
                 }
                 
-                const fontSize = chartMode === 'both' ? '0.55rem' : '0.7rem';
+                const fontSize = chartMode === 'both' ? '0.7rem' : '0.85rem';
                 const labelWidth = labelCount === 13 ? '52px' : '60px';
                 labelsHtml += `<span style="font-size:${fontSize}; color:#333; font-weight:600; width:${labelWidth}; text-align:center;">${displayVal}</span>`;
             }
@@ -3821,7 +4417,7 @@
             const ctx2 = document.getElementById('categoryChart').getContext('2d');
             if (categoryChart) categoryChart.destroy();
             
-            const chartColors = ['rgba(46,117,182,0.8)','rgba(84,130,53,0.8)','rgba(191,144,0,0.8)','rgba(198,89,17,0.8)'];
+            const chartColors = ['#3b82f6','#8b5cf6','#10b981','#f97316'];
             
             // 전체 매출 계산 (선택한 모드에 따라)
             let allCategoryData = {};
@@ -3978,7 +4574,7 @@
                 <div class="cat-card"><div class="cat-card-title">확정매출</div><div class="cat-card-value">${formatCurrency(confirmed)}</div></div>
                 <div class="cat-card"><div class="cat-card-title">수금액</div><div class="cat-card-value">${formatCurrency(collected)}</div></div>
                 <div class="cat-card"><div class="cat-card-title">수금예정액</div><div class="cat-card-value">${formatCurrency(outstanding)}</div></div>
-                <div class="cat-card" style="border-color:#C00000;"><div class="cat-card-title">관리미수금<br><span style="font-size:10px;">(매출 발생후 +30일)</span></div><div class="cat-card-value" style="color:#C00000;">${formatCurrency(delayed)}</div></div>
+                <div class="cat-card" style="border-color:#C00000;"><div class="cat-card-title" style="display:flex; align-items:center; gap:4px; justify-content:center;"><span>관리미수금</span><span onmouseenter="showDelayTooltip(event)" onmouseleave="hideDelayTooltip()" style="display:inline-flex; align-items:center; justify-content:center; width:12px; height:12px; background:#e2e8f0; border-radius:50%; font-size:0.5rem; color:#64748b; cursor:help;">?</span></div><div class="cat-card-value" style="color:#C00000;">${formatCurrency(delayed)}</div></div>
             `;
             }
         }
@@ -4167,14 +4763,14 @@
                         return `<td class="${classes.join(' ')}">${value}</td>`;
                     }
                     
-                    // 이익률 컬럼은 퍼센트로 표시
-                    if (h === '이익률' || h === '이익률_1') {
+                    // 이익률, 특허료 비율 컬럼은 퍼센트로 표시
+                    if (h === '이익률' || h === '이익률_1' || h === '특허료 비율') {
                         const numVal = parseNumber(value);
                         if (!isNaN(numVal) && numVal !== 0) {
-                            const percentVal = Math.round(numVal * 100) + '%';
+                            const percentVal = (numVal * 100).toFixed(1).replace(/\.0$/, '') + '%';
                             return `<td class="${classes.join(' ')} number" style="${style}">${percentVal}</td>`;
                         }
-                        return `<td class="${classes.join(' ')}" style="${style}">${value || ''}</td>`;
+                        return `<td class="${classes.join(' ')}" style="${style}">${value === 0 ? '0%' : (value || '')}</td>`;
                     }
                     
                     const numValue = parseNumber(value);
@@ -4274,13 +4870,15 @@
         function formatNumber(num) { return Math.round(num).toLocaleString('ko-KR'); }
         
         function formatCurrency(num) {
-            if (num >= 100000000) return Math.round(num / 100000000) + '억원';
+            if (num === 0) return '0.0억원';
+            if (num >= 100000000) return (num / 100000000).toFixed(1) + '억원';
             if (num >= 10000) return Math.round(num / 10000).toLocaleString('ko-KR') + '만원';
             return Math.round(num).toLocaleString('ko-KR') + '원';
         }
         
         function formatCompact(num) {
-            if (num >= 100000000) return Math.round(num / 100000000) + '억';
+            if (num === 0) return '0.0억';
+            if (num >= 100000000) return (num / 100000000).toFixed(1) + '억';
             if (num >= 10000) return Math.round(num / 10000).toLocaleString('ko-KR') + '만';
             return Math.round(num).toLocaleString('ko-KR');
         }
